@@ -32,33 +32,44 @@ const login = async(req, res) => {
         email: req.body.email
       }
     }).then((value) => {return(value)})
-    .catch((err) => {return {"erro": "Usuário não encontrado"}})
+    .catch((err) => {return {"erro": "Usuário não encontrado", "validation": false}})
 
-    bcrypt.compare(req.body.senha, usuario.senha).then((value) => {
-      if (value) {
-        let data = {"uid": usuario.id, "role": usuario.tipo}
-        jwt.sign(data, process.env.KEY, {expiresIn: '30s'}, function(err2, token) {
-          if(err2 == null){
-            if (req.body.update === true) {
-              next()
-            }else{
-              res.status(200).json({"token": token, "uid": result[0].id, "uname": result[0].nome, "validation": true}).end()
+    if (usuario.erro == null) {
+      bcrypt.compare(req.body.senha, usuario.senha).then((value) => {
+        if (value) {
+          let data = {"uid": usuario.id, "role": usuario.tipo}
+          jwt.sign(data, process.env.KEY, {expiresIn: '1m'}, function(err2, token) {
+            console.log("a")
+            if(err2 == null){
+  
+                res.status(200).json({"token": token, "uid": usuario.id, "uname": usuario.nome, "validation": true}).end()
+            } else {
+                res.status(500).json(err2).end()
             }
-          } else {
-              res.status(404).json(err2).end()
-          }
-          
-        })  
-      } else {
-        res.status(201).json({"validation": false}).end()
-      }
-    })
+            
+          })  
+        } else {
+          res.status(201).json({"erro": "Senha inválida", "validation": false}).end()
+        }
+      })
+    } else {
+      res.status(404).json(usuario).end()
+    }
 
-    res.status(200).json(usuario).end()
+    
 }
 
 const readAll = async (req, res) => {
-    
+    const usuarios = await prisma.usuario.findMany({
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        tipo: true
+      }
+    })
+
+    res.status(200).json(usuarios).end()
 }
 
 module.exports = {

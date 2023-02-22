@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken")
-require("dotenv").config()
 
 const validaAcesso = (req, res, next) => {
     const token = req.headers.authorization
@@ -20,9 +19,9 @@ const permitir = (req, res) => {
     const token = req.headers.authorization
 
     jwt.verify(token, process.env.KEY, (err, data) => {
-        if (err != null) res.status(401).json({"validation": false}).end()
+        if (err != null) res.status(401).json({...err, "validation": false}).end()
         else{
-            if(data["uid"] == req.params.id){
+            if(data["uid"] == req.body.id){
                 res.status(200).json({"validation": true}).end()
             }
             else{
