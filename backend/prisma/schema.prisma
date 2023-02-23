@@ -23,6 +23,7 @@ model Motorista {
   cpf String @unique
   cnh String @unique
   nome String
+  disponivel Boolean @default(true)
   operacoes Operacao[]
 }
 

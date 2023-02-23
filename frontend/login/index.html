@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Login - AgroTech</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <span><i class="fa-sharp fa-solid fa-seedling"></i> AgroTech</span>
+        </nav>
+    </header>
+    <main>
+        <div class="card-login">
+            <div class="left">
+                <span>AgroTech</span>
+                <p>Sistema de Controle Veicular desenvolvido para auxiliar na obtenção rápida de relatórios além do gerenciamento dos recursos da empresa</p>
+            </div>
+            <div class="right">
+                <div class="form">
+                    <div class="form-content">
+                        <div class="form-control">
+                            <label for="email">E-mail</label>
+                            <input type="text" id="email" name="email">
+                        </div>
+                        <div class="form-control">
+                            <label for="senha">Senha</label>
+                            <input type="password" id="senha" name="senha">
+                        </div>
+                        <span class="error escondido">Usuário não encontrado</span>
+                    </div>
+                    
+                    <button onclick="login()">Entrar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://kit.fontawesome.com/c68ccb89e7.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
