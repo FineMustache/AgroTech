@@ -11,14 +11,19 @@ function login() {
       fetch('http://localhost:3000/agrotech/login', options)
         .then(response => response.json())
         .then(response => {
-            console.log(response.erro)
             if (response.erro !== undefined) {
                 document.querySelector('.error').innerHTML = response.erro
                 document.querySelector('.error').classList.remove('escondido')
             } else {
                 document.querySelector('.error').classList.add('escondido')
                 localStorage.setItem('@uinfo', JSON.stringify(response))
-                console.log('logou')
+                if (response.tipo == "gerente") {
+                    window.location.href = "../home/index.html"
+                } else if (response.tipo == "funcionario") {
+
+                } else {
+                    window.location.reload()
+                }
             }
         })
         .catch(err => console.error(err));

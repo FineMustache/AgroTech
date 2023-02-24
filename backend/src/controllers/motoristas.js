@@ -20,6 +20,7 @@ const readAll = async (req, res) => {
             cpf: true,
             cnh: true,
             nome: true,
+            disponivel: true,
             operacoes: true
         }
     })
@@ -37,6 +38,7 @@ const read = async (req, res) => {
             cpf: true,
             cnh: true,
             nome: true,
+            disponivel: true,
             operacoes: true
         }
     })

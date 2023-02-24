@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Home - AgroTech</title>
+</head>
+<body onload="carregar()">
+    <div class="sidebar">
+        <div class="sb-items">
+            <span class="sb-title"><i class="fa-sharp fa-solid fa-seedling"></i> AgroTech</span>
+            <div onclick="togglesbi(this)" class="sb-i active">
+                <span data-title="Dashboard">Dashboard</span>
+            </div>
+            <div onclick="togglesbi(this)" class="sb-i">
+                <span data-title="Motoristas">Motoristas</span>
+            </div>
+            <div onclick="togglesbi(this)" class="sb-i">
+                <span data-title="Veículos">Veículos</span>
+            </div>
+        </div>
+        <div class="logout"><span>Encerrar Sessão</span></div>
+        
+    </div>
+    <main>
+        <div class="page-motoristas">
+            <div class="card-motorista modelo">
+                <div class="card-motorista-top"><i class="fa-sharp fa-solid fa-pen"></i></div>
+                <div class="motorista-icon">
+                    <span><i class="fa-solid fa-user"></i></span>
+                </div>
+                <div class="motorista-info">
+                    <span>
+                        NOME: <span id="nome">Arroz</span>
+                    </span>
+                    <span>
+                        CPF: <span id="cpf">123</span>
+                    </span>
+                    <span>
+                        CNH: <span id="cnh">12334</span>
+                    </span>
+                    <span>
+                        Disponibilidade: <span id="disp">Livre</span>
+                    </span>
+                    <span>
+                        Nº de Operações: <span id="nop">1</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://kit.fontawesome.com/c68ccb89e7.js" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>

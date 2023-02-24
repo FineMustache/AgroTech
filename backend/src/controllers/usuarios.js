@@ -38,11 +38,11 @@ const login = async(req, res) => {
       bcrypt.compare(req.body.senha, usuario.senha).then((value) => {
         if (value) {
           let data = {"uid": usuario.id, "role": usuario.tipo}
-          jwt.sign(data, process.env.KEY, {expiresIn: '1m'}, function(err2, token) {
+          jwt.sign(data, process.env.KEY, {expiresIn: '30m'}, function(err2, token) {
             console.log("a")
             if(err2 == null){
   
-                res.status(200).json({"token": token, "uid": usuario.id, "uname": usuario.nome, "validation": true}).end()
+                res.status(200).json({"token": token, "uid": usuario.id, "uname": usuario.nome, "tipo": usuario.tipo, "validation": true}).end()
             } else {
                 res.status(500).json(err2).end()
             }
