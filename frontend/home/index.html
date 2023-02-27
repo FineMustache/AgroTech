@@ -24,10 +24,24 @@
         <div class="logout"><span>Encerrar Sessão</span></div>
         
     </div>
-    <main>
+    <div class="main-motoristas">
+        <div class="page-top">
+            <button class="btnCadastrar">Cadastrar</button>
+            <div class="right">
+                <span>Filtro:</span>
+                <div class="check-control">
+                    <label for="disp">Disponível</label>
+                    <input type="checkbox" name="disp" id="cbDisp" value="true">
+                </div>
+                <div class="check-control">
+                    <label for="indisp">Indisponível</label>
+                    <input type="checkbox" name="indisp" id="cbIndisp" value="false">
+                </div>
+            </div>
+        </div>
         <div class="page-motoristas">
             <div class="card-motorista modelo">
-                <div class="card-motorista-top"><i class="fa-sharp fa-solid fa-pen"></i></div>
+                <div class="card-motorista-top"><i onclick="toggleModalEditMotorista(this.parentNode.parentNode)" class="fa-sharp fa-solid fa-pen"></i></div>
                 <div class="motorista-icon">
                     <span><i class="fa-solid fa-user"></i></span>
                 </div>
@@ -50,7 +64,39 @@
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+    <div class='modal modal-edit-motorista escondido' onclick="wiggle(event)">
+        <div class='modal-container card-motorista'>
+            <div class="card-motorista-top"><i onclick="toggleModalEditMotorista()" class="fa-sharp fa-solid fa-xmark"></i></div>
+            <div class="motorista-icon">
+                <span><i class="fa-solid fa-user"></i></span>
+            </div>
+            <div class="motorista-info">
+                <span>
+                    NOME: <input type="text" name="nome" id="inpNome"></span>
+                </span>
+                <span>
+                    CPF: <input onkeydown="cpfChange(event)" maxlength="14" type="text" name="cpf" id="inpCpf"></span>
+                </span>
+                <span>
+                    CNH: <input type="text" name="cnh" id="inpCnh"></span>
+                </span>
+                <span>
+                    Disponibilidade: <span id="disp">Livre</span>
+                </span>
+                <span>
+                    Nº de Operações: <span id="nop">1</span>
+                </span>
+                <input type="text" id="inpId" hidden>
+                
+                <div class="card-motorista-bottom">
+                    <button class="btnCancelar" onclick="toggleModalEditMotorista()">Cancelar</button>
+                    <button class="btnConfirmar" onclick="editMotorista()">Confirmar</button>
+                    <button class="btnExcluir" onclick="excluirMotorista()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://kit.fontawesome.com/c68ccb89e7.js" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>

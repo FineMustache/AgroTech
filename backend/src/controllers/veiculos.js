@@ -59,7 +59,7 @@ const update = async (req, res) => {
         data: req.body
     })
 
-    res.status(204).json(veiculo).end()
+    res.status(200).json(veiculo).end()
 }
 
 const remove = async (req, res) => {
@@ -69,7 +69,7 @@ const remove = async (req, res) => {
         }
     })
 
-    res.status(204).json(veiculo).end()
+    res.status(200).json(veiculo).end()
 }
 
 module.exports = {

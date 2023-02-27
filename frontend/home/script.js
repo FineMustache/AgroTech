@@ -1,3 +1,5 @@
+var motoristas = []
+
 function togglesbi(ev) {
     document.querySelectorAll('.sb-i').forEach(i => {
         i.classList.remove('active')
@@ -17,6 +19,7 @@ function carregarMotoristas() {
     fetch('http://localhost:3000/agrotech/motoristas', options)
     .then(response => response.json())
     .then(response => {
+        motoristas = response
         response.forEach(r => {
             let modelo = document.querySelector('.page-motoristas').querySelector('.modelo').cloneNode(true)
             modelo.querySelector('#nome').innerHTML = r.nome
@@ -25,10 +28,112 @@ function carregarMotoristas() {
             modelo.querySelector('#disp').innerHTML = r.disponivel ? "Livre" : "Ocupado"
             modelo.querySelector('#nop').innerHTML = r.operacoes.length
 
+            modelo.id = "m" + r.id
+
             modelo.classList.remove('modelo')
 
             document.querySelector('.page-motoristas').appendChild(modelo)
         })
     })
     .catch(err => console.error(err));
+}
+
+function toggleModalEditMotorista(card){
+    console.log(card)
+    if (card !== undefined) {
+        document.querySelector('.modal-edit-motorista').querySelector('#inpNome').value = card.querySelector('#nome').innerHTML
+        document.querySelector('.modal-edit-motorista').querySelector('#inpCpf').value = card.querySelector('#cpf').innerHTML
+        document.querySelector('.modal-edit-motorista').querySelector('#inpCnh').value = card.querySelector('#cnh').innerHTML
+        document.querySelector('.modal-edit-motorista').querySelector('#inpId').value = card.id.slice(1)
+    } else {
+        document.querySelector('.modal-edit-motorista').querySelector('#inpNome').value = ""
+        document.querySelector('.modal-edit-motorista').querySelector('#inpCpf').value = ""
+        document.querySelector('.modal-edit-motorista').querySelector('#inpCnh').value = ""
+    }
+    document.querySelector('.modal-edit-motorista').classList.toggle('escondido')
+    document.body.style.overflow = 'hidden'
+}
+
+function wiggle(ev) {
+    if (ev.target.classList.contains('modal')) {
+        document.querySelector('.modal-edit-motorista').querySelector('.modal-container').classList.add('wiggle')
+        setTimeout(() => {
+            document.querySelector('.modal-edit-motorista').querySelector('.modal-container').classList.remove('wiggle')
+        }, 500)
+    }
+}
+
+function cpfChange(ev) {
+    if (isNaN(ev.key) && ev.key !== "Backspace") {
+        ev.preventDefault()
+    } else if(ev.key !== "Backspace") {
+        if (ev.target.value.length == 2) {
+            ev.preventDefault()
+            ev.target.value = ev.target.value + ev.key + "."
+        } else if (ev.target.value.length == 6) {
+            ev.preventDefault()
+            ev.target.value = ev.target.value + ev.key + "."
+        } else if (ev.target.value.length == 10) {
+            ev.preventDefault()
+            ev.target.value = ev.target.value + ev.key + "-"
+        } else if (ev.target.value.length == 3) {
+            ev.preventDefault()
+            ev.target.value = ev.target.value + "." + ev.key
+        } else if (ev.target.value.length == 7) {
+            ev.preventDefault()
+            ev.target.value = ev.target.value + "." + ev.key
+        } else if (ev.target.value.length == 11) {
+            ev.preventDefault()
+            ev.target.value = ev.target.value + "-" + ev.key
+        }
+    }
+}
+
+function editMotorista() {
+    const nome = document.querySelector('.modal-edit-motorista').querySelector('#inpNome').value
+    const cpf = document.querySelector('.modal-edit-motorista').querySelector('#inpCpf').value
+    const cnh = document.querySelector('.modal-edit-motorista').querySelector('#inpCnh').value
+    const id = document.querySelector('.modal-edit-motorista').querySelector('#inpId').value
+    if (nome.length > 0 && cpf.length > 0 && cnh.length > 0) {
+        const options = {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: `{"id":${id},"nome":"${nome}","cpf":"${cpf}","cnh":"${cnh}"}`
+          };
+          
+          fetch('http://localhost:3000/agrotech/motoristas', options)
+            .then(response => response.json())
+            .then(response => {
+                if (response.id !== null) {
+                    let modelo = document.querySelector('.page-motoristas').querySelector('.modelo').cloneNode(true)
+                    document.querySelector('.page-motoristas').innerHTML = ""
+                    document.querySelector('.page-motoristas').appendChild(modelo)
+                    carregarMotoristas()
+                    toggleModalEditMotorista()
+                }
+            })
+            .catch(err => console.error(err));
+    }
+}
+
+function excluirMotorista() {
+    const id = document.querySelector('.modal-edit-motorista').querySelector('#inpId').value
+    const options = {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: `{"id":${id}}`
+      };
+      
+      fetch('http://localhost:3000/agrotech/motoristas', options)
+        .then(response => response.json())
+        .then(response => {
+            if (response.id !== null) {
+                let modelo = document.querySelector('.page-motoristas').querySelector('.modelo').cloneNode(true)
+                document.querySelector('.page-motoristas').innerHTML = ""
+                document.querySelector('.page-motoristas').appendChild(modelo)
+                carregarMotoristas()
+                toggleModalEditMotorista()
+            }
+        })
+        .catch(err => console.error(err));
 }

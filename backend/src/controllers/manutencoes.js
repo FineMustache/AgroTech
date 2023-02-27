@@ -38,7 +38,7 @@ const update = async (req, res) => {
         data: req.body
     })
 
-    res.status(204).json(manutencao).end()
+    res.status(200).json(manutencao).end()
 }
 
 const remove = async (req, res) => {
@@ -48,7 +48,7 @@ const remove = async (req, res) => {
         }
     })
 
-    res.status(204).json(manutencao).end()
+    res.status(200).json(manutencao).end()
 }
 
 module.exports = {
