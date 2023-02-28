@@ -38,7 +38,7 @@ const login = async(req, res) => {
       bcrypt.compare(req.body.senha, usuario.senha).then((value) => {
         if (value) {
           let data = {"uid": usuario.id, "role": usuario.tipo}
-          jwt.sign(data, process.env.KEY, {expiresIn: '30m'}, function(err2, token) {
+          jwt.sign(data, process.env.KEY, {expiresIn: '20m'}, function(err2, token) {
             console.log("a")
             if(err2 == null){
   

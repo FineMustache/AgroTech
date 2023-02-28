@@ -29,6 +29,7 @@ function carregarMotoristas() {
             modelo.querySelector('#nop').innerHTML = r.operacoes.length
 
             modelo.id = "m" + r.id
+            modelo.setAttribute('disponibilidade', r.disponivel)
 
             modelo.classList.remove('modelo')
 
@@ -54,11 +55,27 @@ function toggleModalEditMotorista(card){
     document.body.style.overflow = 'hidden'
 }
 
+function toggleModalCreateMotorista(card){
+    console.log(card)
+    if (card !== undefined) {
+        document.querySelector('.modal-create-motorista').querySelector('#inpNome').value = card.querySelector('#nome').innerHTML
+        document.querySelector('.modal-create-motorista').querySelector('#inpCpf').value = card.querySelector('#cpf').innerHTML
+        document.querySelector('.modal-create-motorista').querySelector('#inpCnh').value = card.querySelector('#cnh').innerHTML
+        document.querySelector('.modal-create-motorista').querySelector('#inpId').value = card.id.slice(1)
+    } else {
+        document.querySelector('.modal-create-motorista').querySelector('#inpNome').value = ""
+        document.querySelector('.modal-create-motorista').querySelector('#inpCpf').value = ""
+        document.querySelector('.modal-create-motorista').querySelector('#inpCnh').value = ""
+    }
+    document.querySelector('.modal-create-motorista').classList.toggle('escondido')
+    document.body.style.overflow = 'hidden'
+}
+
 function wiggle(ev) {
     if (ev.target.classList.contains('modal')) {
-        document.querySelector('.modal-edit-motorista').querySelector('.modal-container').classList.add('wiggle')
+        ev.target.querySelector('.modal-container').classList.add('wiggle')
         setTimeout(() => {
-            document.querySelector('.modal-edit-motorista').querySelector('.modal-container').classList.remove('wiggle')
+            ev.target.querySelector('.modal-container').classList.remove('wiggle')
         }, 500)
     }
 }
@@ -136,4 +153,114 @@ function excluirMotorista() {
             }
         })
         .catch(err => console.error(err));
+}
+
+function toggleFilterMotoristas() {
+    document.querySelector('.main-motoristas').querySelector('.filter-db').classList.toggle('escondido')
+}
+
+function filterMotoristasChange() {
+    let cbDisp = document.querySelector("#cbMotDisp")
+    let cbInd = document.querySelector("#cbMotInd")
+    let cards = document.querySelector('.page-motoristas').querySelectorAll('.card-motorista')
+
+    if (cbDisp.checked) {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "true") {
+                    c.classList.remove('escondido')
+                }
+            }
+            
+        })
+    } else {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "true") {
+                    c.classList.add('escondido')
+                }
+            }
+            
+        })
+    }
+
+    if (cbInd.checked) {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "false") {
+                    c.classList.remove('escondido')
+                }
+            }
+            
+        })
+
+    } else {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "false") {
+                    c.classList.add('escondido')
+                }
+            }
+            
+        })
+    }
+}
+
+function cadastrarMotorista() {
+    const nome = document.querySelector('.modal-create-motorista').querySelector('#inpNome').value
+    const cpf = document.querySelector('.modal-create-motorista').querySelector('#inpCpf').value
+    const cnh = document.querySelector('.modal-create-motorista').querySelector('#inpCnh').value
+    if (nome.length > 0 && cpf.length > 0 && cnh.length > 0) {
+            const options = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: `{"cpf":"${cpf}","cnh":"${cnh}","nome":"${nome}"}`
+              };
+              
+              fetch('http://localhost:3000/agrotech/motoristas', options)
+                .then(response => response.json())
+                .then(response => {
+                    if (response.count !== null) {
+                        let modelo = document.querySelector('.page-motoristas').querySelector('.modelo').cloneNode(true)
+                        document.querySelector('.page-motoristas').innerHTML = ""
+                        document.querySelector('.page-motoristas').appendChild(modelo)
+                        carregarMotoristas()
+                        toggleModalCreateMotorista()
+                    }
+                })
+                .catch(err => console.error(err));
+    }
+}
+
+function logout() {
+    window.localStorage.removeItem('@uinfo')
+    window.location.href = "../login"
+}
+
+setInterval(validarToken, 5000)
+
+function validarToken() {
+    let uinfo = window.localStorage.getItem('@uinfo')
+    if (uinfo == null) {
+        window.location.href = "../login"
+    }else{
+        uinfo = JSON.parse(uinfo)
+        const options = {
+            method: 'POST',
+            headers: {
+              Authorization: `${uinfo.token}`,
+              'Content-Type': 'application/json'
+            },
+            body: `{"id":${uinfo.uid}}`
+          };
+          
+          fetch('http://localhost:3000/agrotech/validate', options)
+            .then(response => response.json())
+            .then(response => {
+                if (!response.validation) {
+                    logout()
+                }
+            })
+            .catch(err => console.error(err));
+    }
 }

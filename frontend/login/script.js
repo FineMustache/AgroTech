@@ -20,11 +20,39 @@ function login() {
                 if (response.tipo == "gerente") {
                     window.location.href = "../home/index.html"
                 } else if (response.tipo == "funcionario") {
-
+                    window.location.href = "../home/index.html"
                 } else {
                     window.location.reload()
                 }
             }
         })
         .catch(err => console.error(err));
+}
+
+setInterval(validarToken, 5000)
+
+function validarToken() {
+    let uinfo = window.localStorage.getItem('@uinfo')
+        if (uinfo !== null) {
+            uinfo = JSON.parse(uinfo)
+            const options = {
+                method: 'POST',
+                headers: {
+                Authorization: `${uinfo.token}`,
+                'Content-Type': 'application/json'
+                },
+                body: `{"id":${uinfo.uid}}`
+            };
+            
+            fetch('http://localhost:3000/agrotech/validate', options)
+                .then(response => response.json())
+                .then(response => {
+                    if (!response.validation) {
+                        window.localStorage.removeItem('@uinfo')
+                    } else {
+                        window.location.href = '../home'
+                    }
+                })
+                .catch(err => console.error(err));
+        }
 }

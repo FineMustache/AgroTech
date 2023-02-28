@@ -1,53 +1,94 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Home - AgroTech</title>
+    <script>
+        let uinfo = window.localStorage.getItem('@uinfo')
+        if (uinfo == null) {
+            window.location.href = "../login"
+        }else{
+            uinfo = JSON.parse(uinfo)
+            const options = {
+                method: 'POST',
+                headers: {
+                Authorization: `${uinfo.token}`,
+                'Content-Type': 'application/json'
+                },
+                body: `{"id":${uinfo.uid}}`
+            };
+            
+            fetch('http://localhost:3000/agrotech/validate', options)
+                .then(response => response.json())
+                .then(response => {
+                    if (!response.validation) {
+                        window.localStorage.removeItem('@uinfo')
+                        window.location.href = "../login"
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+    </script>
 </head>
+
 <body onload="carregar()">
     <div class="sidebar">
         <div class="sb-items">
             <span class="sb-title"><i class="fa-sharp fa-solid fa-seedling"></i> AgroTech</span>
-            <div onclick="togglesbi(this)" class="sb-i active">
+            <div onclick="togglesbi(this)" class="sb-i">
                 <span data-title="Dashboard">Dashboard</span>
             </div>
-            <div onclick="togglesbi(this)" class="sb-i">
+            <div onclick="togglesbi(this)" class="sb-i active">
                 <span data-title="Motoristas">Motoristas</span>
             </div>
             <div onclick="togglesbi(this)" class="sb-i">
                 <span data-title="Veículos">Veículos</span>
             </div>
+            <div onclick="togglesbi(this)" class="sb-i">
+                <span data-title="Operações">Operações</span>
+            </div>
+            <div onclick="togglesbi(this)" class="sb-i">
+                <span data-title="Manutenções">Manutenções</span>
+            </div>
         </div>
-        <div class="logout"><span>Encerrar Sessão</span></div>
-        
+        <div class="logout"><span onclick="logout()">Encerrar Sessão</span></div>
+
     </div>
     <div class="main-motoristas">
         <div class="page-top">
-            <button class="btnCadastrar">Cadastrar</button>
+            <button class="btnCadastrar" onclick="toggleModalCreateMotorista()">Cadastrar</button>
             <div class="right">
-                <span>Filtro:</span>
-                <div class="check-control">
-                    <label for="disp">Disponível</label>
-                    <input type="checkbox" name="disp" id="cbDisp" value="true">
+                <div class="filter">
+                    <span onclick="toggleFilterMotoristas()"><i class="fa-solid fa-filter"></i> Filtro</span>
+                    <div class="filter-db escondido">
+                        <label class="container">Disponível
+                            <input onclick="filterMotoristasChange()" type="checkbox" id="cbMotDisp" checked>
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label class="container">Indisponível
+                            <input onclick="filterMotoristasChange()" type="checkbox" id="cbMotInd" checked>
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
                 </div>
-                <div class="check-control">
-                    <label for="indisp">Indisponível</label>
-                    <input type="checkbox" name="indisp" id="cbIndisp" value="false">
-                </div>
+
             </div>
         </div>
         <div class="page-motoristas">
             <div class="card-motorista modelo">
-                <div class="card-motorista-top"><i onclick="toggleModalEditMotorista(this.parentNode.parentNode)" class="fa-sharp fa-solid fa-pen"></i></div>
+                <div class="card-motorista-top"><i onclick="toggleModalEditMotorista(this.parentNode.parentNode)"
+                        class="fa-sharp fa-solid fa-pen"></i></div>
                 <div class="motorista-icon">
                     <span><i class="fa-solid fa-user"></i></span>
                 </div>
                 <div class="motorista-info">
-                    <span>
-                        NOME: <span id="nome">Arroz</span>
+                    <span id="nomeWrap">
+                        NOME: <span id="nome">Arroz asdasdasdasd dasdasdasd dasdasd asdada</span>
                     </span>
                     <span>
                         CPF: <span id="cpf">123</span>
@@ -59,7 +100,7 @@
                         Disponibilidade: <span id="disp">Livre</span>
                     </span>
                     <span>
-                        Nº de Operações: <span id="nop">1</span>
+                        Nº de Operações: <span id="nop">0</span>
                     </span>
                 </div>
             </div>
@@ -67,7 +108,8 @@
     </div>
     <div class='modal modal-edit-motorista escondido' onclick="wiggle(event)">
         <div class='modal-container card-motorista'>
-            <div class="card-motorista-top"><i onclick="toggleModalEditMotorista()" class="fa-sharp fa-solid fa-xmark"></i></div>
+            <div class="card-motorista-top"><i onclick="toggleModalEditMotorista()"
+                    class="fa-sharp fa-solid fa-xmark"></i></div>
             <div class="motorista-icon">
                 <span><i class="fa-solid fa-user"></i></span>
             </div>
@@ -88,7 +130,7 @@
                     Nº de Operações: <span id="nop">1</span>
                 </span>
                 <input type="text" id="inpId" hidden>
-                
+
                 <div class="card-motorista-bottom">
                     <button class="btnCancelar" onclick="toggleModalEditMotorista()">Cancelar</button>
                     <button class="btnConfirmar" onclick="editMotorista()">Confirmar</button>
@@ -97,7 +139,40 @@
             </div>
         </div>
     </div>
+    <div class='modal modal-create-motorista escondido' onclick="wiggle(event)">
+        <div class='modal-container card-motorista'>
+            <div class="card-motorista-top"><i onclick="toggleModalCreateMotorista()"
+                    class="fa-sharp fa-solid fa-xmark"></i></div>
+            <div class="motorista-icon">
+                <span><i class="fa-solid fa-user"></i></span>
+            </div>
+            <div class="motorista-info">
+                <span>
+                    NOME: <input type="text" name="nome" id="inpNome"></span>
+                </span>
+                <span>
+                    CPF: <input onkeydown="cpfChange(event)" maxlength="14" type="text" name="cpf" id="inpCpf"></span>
+                </span>
+                <span>
+                    CNH: <input type="text" name="cnh" id="inpCnh"></span>
+                </span>
+                <span>
+                    Disponibilidade: <span id="disp">Livre</span>
+                </span>
+                <span>
+                    Nº de Operações: <span id="nop">0</span>
+                </span>
+                <input type="text" id="inpId" hidden>
+
+                <div class="card-motorista-bottom">
+                    <button class="btnCancelar" onclick="toggleModalCreateMotorista()">Cancelar</button>
+                    <button class="btnConfirmar" onclick="cadastrarMotorista()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://kit.fontawesome.com/c68ccb89e7.js" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
