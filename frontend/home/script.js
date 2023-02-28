@@ -1,11 +1,13 @@
 var motoristas = []
 
-function togglesbi(ev) {
+function togglesbi(ev, mainId) {
     document.querySelectorAll('.sb-i').forEach(i => {
         i.classList.remove('active')
     })
 
     ev.classList.add('active')
+
+    window.location.href = mainId
 
 }
 
@@ -263,4 +265,9 @@ function validarToken() {
             })
             .catch(err => console.error(err));
     }
+}
+
+function toggleShowVeic(num, num2) {
+    document.querySelector('.radio-opt-' + num).classList.add('radio-opt-active')
+    document.querySelector('.radio-opt-' + num2).classList.remove('radio-opt-active')
 }

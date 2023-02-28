@@ -1,468 +1,531 @@
-@import url('https://fonts.googleapis.com/css2?family=Donegal+One&family=Kanit:wght@200;400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Donegal+One&family=Kanit:wght@200;400;700&display=swap");
 
-body{
-    font-family: 'Kanit', sans-serif;
-    background-color: #c9e6db;
-    display: grid;
-    grid-template-columns: 2fr 9fr;
-    grid-template-rows: 1fr 9fr;
+body {
+  font-family: "Kanit", sans-serif;
+  background-color: #c9e6db;
+  display: grid;
+  grid-template-columns: 2fr 9fr;
+  grid-template-rows: 1fr 9fr;
 }
 
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
 
-body, html{
-    height: 100vh;
-    margin: 0;
+body,
+html {
+  height: 100vh;
+  margin: 0;
 }
 
-
-.sidebar{
-    grid-area: 1 / 1 / 3 / 2;
-    background-color: #00FFAB;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.sidebar {
+  grid-area: 1 / 1 / 3 / 2;
+  background-color: #00ffab;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.sb-items{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.sb-items {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-.sb-title{
-    width: 100%;
-    text-align: center;
-    font-size: 20pt;
-    color: #006e4a;
-    padding: 25px;
-    font-weight: bold;
+.sb-title {
+  width: 100%;
+  text-align: center;
+  font-size: 20pt;
+  color: #006e4a;
+  padding: 25px;
+  font-weight: bold;
 }
 
-.sb-i{
-    padding: 20px;
-    font-size: 16pt;
-    cursor: pointer;
-    color: #006e4a;
-    overflow: hidden;
-    position: relative;
+.sb-i {
+  padding: 20px;
+  font-size: 16pt;
+  cursor: pointer;
+  color: #006e4a;
+  overflow: hidden;
+  position: relative;
 }
 
-.sb-i:hover{
-    background-color: #00df9c;
+.sb-i:hover {
+  background-color: #00df9c;
 }
 
-.sb-i::before{
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: -100%;
-    top: 0;
-    background-color: #00795079;
-    transition: .5s ease-out;
+.sb-i::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: -100%;
+  top: 0;
+  background-color: #00795079;
+  transition: 0.5s ease-out;
 }
 
-.sb-i:hover::before{
-    left: 0;
+.sb-i:hover::before {
+  left: 0;
 }
 
-.sb-i span{
-    display: block;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
+.sb-i span {
+  display: block;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
-.sb-i span::before{
-    content: attr(data-title);
-    z-index: 2;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 0;
-    color: white;
-    position: absolute;
-    transition: .5s ease-out;
+.sb-i span::before {
+  content: attr(data-title);
+  z-index: 2;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  color: white;
+  position: absolute;
+  transition: 0.5s ease-out;
 }
 
-.sb-i:hover span::before{
-    width: 100%;
+.sb-i:hover span::before {
+  width: 100%;
 }
 
-.sb-i.active::before{
-    left: 0!important;
+.sb-i.active::before {
+  left: 0 !important;
 }
 
-.sb-i.active span::before{
-    width: 100%!important;
+.sb-i.active span::before {
+  width: 100% !important;
 }
 
-.main-motoristas{
-    grid-area: 1 / 2 / 3 / 3;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
+main {
+  grid-area: 1 / 2 / 3 / 3;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scroll-behavior: smooth;
 }
 
-.logout{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 50px;
-    user-select: none;
-    color: #006e4a;
+.main-motoristas {
+  display: flex;
+  flex-direction: column;
 }
 
-.logout span{
-    padding: 5px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+.main {
+  padding: 25px;
+  min-height: 100vh;
 }
 
-.logout span::after{
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 100%;
-    left: -100%;
-    top: -1px;
-    border-bottom: 2px solid #006e4a;
-    transition: .5s ease-out;
+.logout {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+  user-select: none;
+  color: #006e4a;
 }
 
-.logout span:hover::after{
-    left: 0;
+.logout span {
+  padding: 5px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
-.page-motoristas{
-    width: 100%;
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 25px;
-    overflow-y: auto;
-    min-height: min-content;
-    padding-right: 5px;
+.logout span::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  left: -100%;
+  top: -1px;
+  border-bottom: 2px solid #006e4a;
+  transition: 0.5s ease-out;
 }
 
-.page-motoristas::-webkit-scrollbar{
-    background-color: #006644;
-    width: 5px;
+.logout span:hover::after {
+  left: 0;
 }
 
-.page-motoristas::-webkit-scrollbar-thumb{
-    background-color: #00a870;
+.page-motoristas {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 25px;
+  overflow-y: auto;
+  min-height: min-content;
+  padding-right: 5px;
 }
 
-.card-motorista{
-    background-color: white;
-    height: max-content;
-    display: flex;
-    padding: 25px;
-    padding-top: 50px;
-    position: relative;
-    width: calc(33% - 12.5px);
-    min-width: 350px;
+.page-motoristas::-webkit-scrollbar {
+  background-color: #006644;
+  width: 5px;
 }
 
-.card-motorista-top{
-    position: absolute;
-    width: 100%;
-    height: 40px;
-    background-color: #006e4a;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    padding: 0 15px;
-    color: white;
+.page-motoristas::-webkit-scrollbar-thumb {
+  background-color: #00a870;
 }
 
-.card-motorista-top > i{
-    cursor: pointer;
+.card-motorista {
+  background-color: white;
+  height: max-content;
+  display: flex;
+  padding: 25px;
+  padding-top: 50px;
+  position: relative;
+  width: calc(33% - 12.5px);
+  min-width: 350px;
 }
 
-.motorista-icon{
-    font-size: 6rem;
-    border: 4px solid #006e4a;
-    padding: 0 15px;
-    margin-right: 25px;
-    color: #006e4a;
-    height: max-content;
+.card-motorista-top {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  background-color: #006e4a;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 0 15px;
+  color: white;
 }
 
-.motorista-info{
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    flex: 1;
-    overflow: hidden;
+.card-motorista-top > i {
+  cursor: pointer;
 }
 
-.modelo{
-    display: none!important;
+.motorista-icon {
+  font-size: 6rem;
+  border: 4px solid #006e4a;
+  padding: 0 15px;
+  margin-right: 25px;
+  color: #006e4a;
+  height: max-content;
 }
 
-.motorista-info > span > span{
-    color: #555;
+.motorista-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  overflow: hidden;
 }
 
-.modal{
-    width: 100%;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0,0,0,.5);
+.modelo {
+  display: none !important;
 }
 
-.close{
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    cursor: pointer;
-    font-weight: 700;
+.motorista-info > span > span {
+  color: #555;
 }
 
-.escondido{
-    display: none!important
+.modal {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-wrap{
-    background-color: white;
-    height: max-content;
-    display: flex;
-    padding: 25px;
-    padding-top: 50px;
-    position: relative;
+.close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  font-weight: 700;
 }
 
-.wiggle{
-    /* animation-name: wiggle;
+.escondido {
+  display: none !important;
+}
+
+.modal-wrap {
+  background-color: white;
+  height: max-content;
+  display: flex;
+  padding: 25px;
+  padding-top: 50px;
+  position: relative;
+}
+
+.wiggle {
+  /* animation-name: wiggle;
     animation-duration: .5s;
     animation-iteration-count: 1;
     animation-timing-function: linear;
     animation-direction: normal;
     animation-fill-mode: forwards; */
-    /* animation: wiggle .5s infinite; */
-    animation-name: wiggle;
-    animation-duration: .2s;
-    animation-iteration-count: 1;
+  /* animation: wiggle .5s infinite; */
+  animation-name: wiggle;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
 }
 
 @keyframes wiggle {
-    0% { transform: rotate(0deg); }
-   25% { transform: rotate(2deg); }
-   50% { transform: rotate(-2deg); }
-   75% { transform: rotate(2deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(-2deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
-.motorista-info input{
-    padding: 5px;
-    border: none;
-    border-bottom: 1px solid black;
+.motorista-info input {
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid black;
 }
 
-input:focus{
-    outline: none;
+input:focus {
+  outline: none;
 }
 
-.card-motorista-bottom{
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
+.card-motorista-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
 }
 
-.card-motorista-bottom button{
-    font-size: 1.2rem;
-    padding: 10px 15px;
-    cursor: pointer;
+.card-motorista-bottom button {
+  font-size: 1.2rem;
+  padding: 10px 15px;
+  cursor: pointer;
 }
 
-.btnCancelar{
-    border: 1px solid #006e4a;
-    color: #006e4a;
-    background-color: #fff;
+.btnCancelar {
+  border: 1px solid #006e4a;
+  color: #006e4a;
+  background-color: #fff;
 }
 
-.btnCancelar:hover{
-    background-color: #ddd;
+.btnCancelar:hover {
+  background-color: #ddd;
 }
 
-.btnConfirmar{
-    color: #fff;
-    background-color: #006e4a;
-    border: none    ;
+.btnConfirmar {
+  color: #fff;
+  background-color: #006e4a;
+  border: none;
 }
 
-.btnConfirmar:hover{
-    background-color: #006644;
+.btnConfirmar:hover {
+  background-color: #006644;
 }
 
-.btnExcluir{
-    border: none;
-    color: #fff;
-    background-color: rgb(165, 0, 0);
+.btnExcluir {
+  border: none;
+  color: #fff;
+  background-color: rgb(165, 0, 0);
 }
 
-.btnExcluir:hover{
-    background-color: rgb(138, 0, 0);
+.btnExcluir:hover {
+  background-color: rgb(138, 0, 0);
 }
 
-.page-top{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 20px;
+.page-top {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-.right{
-    display: flex;
-    gap: 10px;
+.right {
+  display: flex;
+  gap: 10px;
 }
 
-#nomeWrap{
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
+#nomeWrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
-.btnCadastrar{
-    font-size: 1.5rem;
-    padding: 10px 30px;
-    background-color: #006644;
-    border: none;
-    color: white;
-    cursor: pointer;
+.btnCadastrar {
+  font-size: 1.5rem;
+  padding: 10px 30px;
+  background-color: #006644;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
 
-.btnCadastrar:hover{
-    background-color: #006644;
+.btnCadastrar:hover {
+  background-color: #006644;
 }
 
-.filter > span{
-    padding: 10px 30px;
-    background-color: #006644;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1.1rem;
+.filter > span {
+  padding: 10px 30px;
+  background-color: #006644;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.1rem;
 }
 
-.filter{
-    display: flex;
-    align-items: center;
-    position: relative;
+.filter {
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
-.filter-db{
-    display: flex;
-    position: absolute;
-    right: 0;
-    top: calc(100% + 5px);
-    z-index: 5;
-    padding: 20px;
-    background-color: white;
-    flex-direction: column;
-    box-shadow: 0 0 15px rgba(0,0,0,.5);
-    gap: 15px;
+.filter-db {
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 5px);
+  z-index: 5;
+  padding: 20px;
+  background-color: white;
+  flex-direction: column;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  gap: 15px;
 }
 
 /* Customize the label (the container) */
 .container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  
-  /* Hide the browser's default checkbox */
-  .container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-  
-  /* Create a custom checkbox */
-  .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    background-color: #eee;
-  }
-  
-  /* On mouse-over, add a grey background color */
-  .container:hover input ~ .checkmark {
-    background-color: #ccc;
-  }
-  
-  /* When the checkbox is checked, add a blue background */
-  .container input:checked ~ .checkmark {
-    background-color: #00df9c;
-  }
-  
-  /* Create the checkmark/indicator (hidden when not checked) */
-  .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-  
-  /* Show the checkmark when checked */
-  .container input:checked ~ .checkmark:after {
-    display: block;
-  }
-  
-  /* Style the checkmark/indicator */
-  .container .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #00df9c;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.modal .motorista-info > span {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.modal input {
+  flex: 1;
+}
+
+@media (max-width: 964px) {
+  .page-motoristas {
+    flex-direction: column;
+    flex-wrap: nowrap;
   }
 
-  .modal .motorista-info > span{
+  .page-motoristas > .card-motorista {
+    width: 100%;
+  }
+}
+
+.showVeic{
     display: flex;
-    gap: 5px;
     align-items: center;
-  }
+    gap: 10px;
+}
 
-  .modal input{
-    flex: 1;
-  }
+.showVeic > span{
+    color: #006e4a;
+    font-size: 1.1rem;
+}
 
-  @media (max-width: 964px) {
-    .page-motoristas{
-        flex-direction: column;
-        flex-wrap: nowrap;
-    }
+.wrap-radio{
+    display: flex;
+    align-items: center;
+    width: 250px;
+    font-size: 1.1rem;
+}
 
-    .page-motoristas > .card-motorista{
-        width: 100%;
-    }
-  }
+.radio-opt-1{
+    padding: 10px;
+    width: 50%;
+    border: 2px solid #006e4a;
+    text-align: center;
+    color: #006e4a;
+    cursor: pointer;
+}
+
+.radio-opt-2{
+    padding: 10px;
+    width: 50%;
+    border: 2px solid #006e4a;
+    text-align: center;
+    color: #006e4a;
+    cursor: pointer;
+}
+
+.radio-opt-active{
+    background-color: #006e4a;
+    color: white;
+    cursor: pointer;
+}
