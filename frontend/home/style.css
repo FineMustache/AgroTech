@@ -1,8 +1,19 @@
+/*
+#00a870
+#006644
+#007950
+#00df9c
+#006e4a
+#00ffab
+*/
+
+
+
 @import url("https://fonts.googleapis.com/css2?family=Donegal+One&family=Kanit:wght@200;400;700&display=swap");
 
 body {
   font-family: "Kanit", sans-serif;
-  background-color: #c9e6db;
+  background-color: #c9d8e6;
   display: grid;
   grid-template-columns: 2fr 9fr;
   grid-template-rows: 1fr 9fr;
@@ -20,7 +31,7 @@ html {
 
 .sidebar {
   grid-area: 1 / 1 / 3 / 2;
-  background-color: #00ffab;
+  background-color: #002647;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -36,7 +47,7 @@ html {
   width: 100%;
   text-align: center;
   font-size: 20pt;
-  color: #006e4a;
+  color: white;
   padding: 25px;
   font-weight: bold;
 }
@@ -45,13 +56,13 @@ html {
   padding: 20px;
   font-size: 16pt;
   cursor: pointer;
-  color: #006e4a;
+  color: white;
   overflow: hidden;
   position: relative;
 }
 
 .sb-i:hover {
-  background-color: #00df9c;
+  background-color: #003961;
 }
 
 .sb-i::before {
@@ -61,7 +72,7 @@ html {
   height: 100%;
   left: -100%;
   top: 0;
-  background-color: #00795079;
+  background-color: #0069c5;
   transition: 0.5s ease-out;
 }
 
@@ -123,7 +134,7 @@ main {
   justify-content: center;
   margin-bottom: 50px;
   user-select: none;
-  color: #006e4a;
+  color: #002647;
 }
 
 .logout span {
@@ -140,7 +151,7 @@ main {
   height: 100%;
   left: -100%;
   top: -1px;
-  border-bottom: 2px solid #006e4a;
+  border-bottom: 2px solid #002647;
   transition: 0.5s ease-out;
 }
 
@@ -161,12 +172,12 @@ main {
 }
 
 .page-motoristas::-webkit-scrollbar {
-  background-color: #006644;
+  background-color: #002647;
   width: 5px;
 }
 
 .page-motoristas::-webkit-scrollbar-thumb {
-  background-color: #00a870;
+  background-color: #006c94;
 }
 
 .card-motorista {
@@ -184,7 +195,7 @@ main {
   position: absolute;
   width: 100%;
   height: 40px;
-  background-color: #006e4a;
+  background-color: #002647;
   top: 0;
   left: 0;
   display: flex;
@@ -200,10 +211,10 @@ main {
 
 .motorista-icon {
   font-size: 6rem;
-  border: 4px solid #006e4a;
+  border: 4px solid #002647;
   padding: 0 15px;
   margin-right: 25px;
-  color: #006e4a;
+  color: #002647;
   height: max-content;
 }
 
@@ -312,8 +323,8 @@ input:focus {
 }
 
 .btnCancelar {
-  border: 1px solid #006e4a;
-  color: #006e4a;
+  border: 1px solid #002647;
+  color: #002647;
   background-color: #fff;
 }
 
@@ -323,12 +334,12 @@ input:focus {
 
 .btnConfirmar {
   color: #fff;
-  background-color: #006e4a;
+  background-color: #002647;
   border: none;
 }
 
 .btnConfirmar:hover {
-  background-color: #006644;
+  background-color: #002647;
 }
 
 .btnExcluir {
@@ -363,19 +374,19 @@ input:focus {
 .btnCadastrar {
   font-size: 1.5rem;
   padding: 10px 30px;
-  background-color: #006644;
+  background-color: #002647;
   border: none;
   color: white;
   cursor: pointer;
 }
 
 .btnCadastrar:hover {
-  background-color: #006644;
+  background-color: #002647;
 }
 
 .filter > span {
   padding: 10px 30px;
-  background-color: #006644;
+  background-color: #002647;
   border: none;
   color: white;
   cursor: pointer;
@@ -439,7 +450,7 @@ input:focus {
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
-  background-color: #00df9c;
+  background-color: #0062a6;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -495,7 +506,7 @@ input:focus {
 }
 
 .showVeic > span{
-    color: #006e4a;
+    color: #002647;
     font-size: 1.1rem;
 }
 
@@ -509,24 +520,24 @@ input:focus {
 .radio-opt-1{
     padding: 10px;
     width: 50%;
-    border: 2px solid #006e4a;
+    border: 2px solid #002647;
     text-align: center;
-    color: #006e4a;
+    color: #002647;
     cursor: pointer;
 }
 
 .radio-opt-2{
     padding: 10px;
     width: 50%;
-    border: 2px solid #006e4a;
+    border: 2px solid #002647;
     text-align: center;
-    color: #006e4a;
+    color: #002647;
     cursor: pointer;
 }
 
 .radio-opt-active{
-    background-color: #006e4a;
-    color: white;
+    background-color: #002647;
+    color: white!important;
     cursor: pointer;
 }
 
@@ -550,7 +561,7 @@ input:focus {
 }
 
 #veicGeral .table-body div span{
-  border-right: 2px solid #006e4a;
+  border-right: 2px solid #002647;
   padding: 15px;
 }
 
@@ -559,7 +570,7 @@ input:focus {
 }
 
 #veicGeral .table-body div{
-  border-top: 2px solid #006e4a;
+  border-top: 2px solid #002647;
   cursor: pointer;
 }
 
@@ -575,7 +586,7 @@ input:focus {
 
 .table-head{
   width: 100%;
-  background-color: #006e4a;
+  background-color: #002647;
   color: white;
   display: flex;
 }
@@ -679,7 +690,7 @@ input:focus {
 
 .row-options{
   display: flex;
-  background-color: #006e4a;
+  background-color: #002647;
   gap: 10px;
   height: 0;
   align-items: center;
@@ -694,7 +705,7 @@ input:focus {
 }
 
 .btnEditarVeicGeral{
-  background-color: #00df9c;
+  background-color: #0062a6;
   border: 2px solid #fff;
   color: white;
   padding: 10px 20px;
@@ -759,32 +770,36 @@ table tbody tr:last-of-type {
 .container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin: 0 auto;
-  max-width: 800px;
   padding: 50px;
+  gap: 50px;
 }
 
 .card {
   background-color: #FFFFFF;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  flex-basis: calc(50% - 20px);
+  flex-basis: calc(40% - 20px);
   margin-bottom: 20px;
-  padding: 20px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  width: min-content;
 }
 
 .card h2 {
   font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #006e4a;
+  color: black;
+  margin: 0;
 }
 
 .card p {
   font-size: 1.2em;
-  margin-bottom: 20px;
   color: #555555;
 }
 
@@ -821,4 +836,73 @@ canvas {
 
 #sum-value-disp-veic{
   font-size: 2.5rem;
+}
+
+.showDash > .wrap-radio{
+  width: min-content!important;
+}
+
+.radio-opt-dash-1{
+  padding: 10px;
+  width: 50%;
+  border: 2px solid #002647;
+  border-left: 2px solid #002647!important;
+  text-align: center;
+  color: #002647;
+  cursor: pointer;
+}
+
+.radio-opt-dash{
+  padding: 10px;
+  width: 50%;
+  border: 2px solid #002647;
+  border-left: none;
+  text-align: center;
+  color: #002647;
+  cursor: pointer;
+}
+
+.showtvm{
+  opacity: 1!important;
+  transform: translate(-50%, 0px)!important;
+  pointer-events: all!important;
+}
+
+.dispTables{
+  position: relative;
+  overflow: hidden;
+  height: 294px;
+}
+
+.dispTableContainer {
+  height: 100%;
+  overflow: auto;
+  opacity: 0;
+  transition: .2s ease-out;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.dispTableContainer:first-child{
+  padding-top: 48px;
+}
+
+.dispTableContainer:nth-child(2){
+  padding-top: 96px;
+}
+
+.dashboard-disp{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.main-dashboard{
+  display: flex;
+  flex-direction: column;
 }

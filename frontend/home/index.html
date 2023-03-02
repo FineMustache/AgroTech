@@ -40,10 +40,10 @@
     <div class="sidebar">
         <div class="sb-items">
             <span class="sb-title"><i class="fa-sharp fa-solid fa-seedling"></i> AgroTech</span>
-            <div onclick="togglesbi(this, '#mainDash')" class="sb-i">
+            <div onclick="togglesbi(this, '#mainDash')" class="sb-i active">
                 <span data-title="Dashboard">Dashboard</span>
             </div>
-            <div onclick="togglesbi(this, '#mainMot')" class="sb-i active">
+            <div onclick="togglesbi(this, '#mainMot')" class="sb-i">
                 <span data-title="Motoristas">Motoristas</span>
             </div>
             <div onclick="togglesbi(this, '#mainVeic')" class="sb-i">
@@ -62,14 +62,20 @@
     <main>
         <div class="main-dashboard main" id="mainDash">
             <div class="page-top">
-                <div class="showVeic">
+                <div class="showDash">
                         
                     <div class="wrap-radio">
-                        <div onclick="toggleShowVeic(1, 2)" class="radio-opt-1 radio-opt-active">
+                        <div onclick="toggleShowDash(1)" class="radio-opt-dash radio-opt-dash-1 radio-opt-active">
                             <span>Geral</span>
                         </div>
-                        <div onclick="toggleShowVeic(2, 1)" class="radio-opt-2">
-                            <span>Segmentado</span>
+                        <div onclick="toggleShowDash(2)" class="radio-opt-dash radio-opt-dash-2">
+                            <span>Disponibilidade</span>
+                        </div>
+                        <div onclick="toggleShowDash(3)" class="radio-opt-dash radio-opt-dash-3">
+                            <span>Manutenção</span>
+                        </div>
+                        <div onclick="toggleShowDash(4)" class="radio-opt-dash radio-opt-dash-4">
+                            <span>Alocação</span>
                         </div>
                     </div>
                 </div>    
@@ -97,18 +103,56 @@
                         </div>
                     </div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nome do Motorista</th>
-                            <th>CPF</th>
-                            <th>CNH</th>
-                            <th>Disponível</th>
-                        </tr>
-                    </thead>
-                    <tbody id="motoristasTableBody">
-                    </tbody>
-                </table>
+                <div class="dispTables">
+                    <div class="dispTableContainer">
+                        <table id="tableVeicMan" indexT="0">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;" colspan="6">Manutenções em Curso</th>
+                                </tr>
+                                <tr>
+                                    <th>Placa do Veículo</th>
+                                    <th>Tipo do Veículo</th>
+                                    <th>Descrição</th>
+                                    <th>Início</th>
+                                    <th>Fim</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="veicManTableBody">
+                                <tr>
+                                    <td>Placa do Veículo</td>
+                                    <td>Tipo do Veículo</td>
+                                    <td>Descrição</td>
+                                    <td>Início</td>
+                                    <td>Fim</td>
+                                    <td>Valor</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="dispTableContainer">
+                        <table id="tableVeicOp" indexT="1">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;" colspan="6">Operações em Curso</th>
+                                </tr>
+                                <tr>
+                                    <th>Placa do Veículo</th>
+                                    <th>Tipo do Veículo</th>
+                                    <th>Descrição</th>
+                                    <th>Saída</th>
+                                    <th>Retorno</th>
+                                    <th>Nome do Motorista</th>
+                                </tr>
+                            </thead>
+                            <tbody id="veicOpTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+                
             </div>
         </div>
         <div class="main-motoristas main" id="mainMot">

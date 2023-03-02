@@ -14,6 +14,8 @@ function togglesbi(ev, mainId) {
 function carregar() {
     carregarMotoristas()
     carregarVeiculos()
+    carregarManutencoes()
+    carregarOperacoes()
 }
 
 function carregarMotoristas() {
@@ -361,7 +363,10 @@ function carregarVeiculos() {
         // let nManutencao = response.reduce((count, obj) => obj.manutencoes.length > 0 ? (obj.manutencoes.at(-1).data_fim == null ? count + 1 : count, 0) : count, 0)
         let nOp = response.reduce((count, obj) => obj.operacoes.length > 0 ? (obj.operacoes.at(-1).data_retorno == null ? count + 1 : count, 0) : count, 0)
         let nOutros = nOcupado - nManutencao - nOp
-        console.log(nManutencao, nOp, nOutros)
+
+        nManutencao = 1
+        nOp = 1
+
         var ctx = document.getElementById('doughnut-chart-disp-veic').getContext('2d');
 		var myChart = new Chart(ctx, {
 			type: 'doughnut',
@@ -385,8 +390,8 @@ function carregarVeiculos() {
                     ],
                     backgroundColor: [
                       "rgb(255, 150, 0)", // red
-                      "rgb(0, 255, 0)", // green
-                      "rgb(0, 0, 255)", //blue
+                      "#003961", // green
+                      "#ccc", //blue
                       "#00ffab", //blue
                     ],
                     labels: ['Em Manutenção', 'Em Operação', 'Outros', 'Livre']
@@ -403,7 +408,6 @@ function carregarVeiculos() {
                         padding: 10,
                         callbacks: {
                             label: function(data) {
-                                console.log(data)
                               var label = data.dataset.labels !== undefined ? data.dataset.labels[data.dataIndex] : data.dataset.label;
                               var value = data.dataset.data[data.dataIndex];
                               return label + ': ' + value;
@@ -425,7 +429,52 @@ function carregarVeiculos() {
 							return percentage;
 						}
 					}
-				}
+				},
+                onClick: (e, a) => {
+                    console.log(a)
+                    if (a[0].datasetIndex == 1) {
+                        if (document.querySelector('.dispTables').querySelectorAll('.showtvm').length > 0) {
+                            if (document.querySelector('.dispTables').querySelector('.showtvm').querySelector('table').getAttribute('indexT') == a[0].index) {
+                                document.querySelector('.dispTables').querySelector('.showtvm').classList.remove('showtvm')
+                            } else {
+                                document.querySelector('.dispTables').querySelectorAll('table').forEach(t => {
+                                    t.parentNode.classList.remove('showtvm')
+                                })
+        
+                                switch (a[0].index) {
+                                    case 0:
+                                        document.getElementById('tableVeicMan').parentNode.classList.add('showtvm')
+                                        break;
+                                    
+                                    case 1:
+                                        document.getElementById('tableVeicOp').parentNode.classList.add('showtvm')
+                                        break;
+        
+                                    default:
+                                        break;
+                                }
+                            }
+                        } else {
+                            document.querySelector('.dispTables').querySelectorAll('table').forEach(t => {
+                                t.parentNode.classList.remove('showtvm')
+                            })
+    
+                            switch (a[0].index) {
+                                case 0:
+                                    document.getElementById('tableVeicMan').parentNode.classList.add('showtvm')
+                                    break;
+                                
+                                case 1:
+                                    document.getElementById('tableVeicOp').parentNode.classList.add('showtvm')
+                                    break;
+    
+                                default:
+                                    break;
+                            }
+                        }
+                        
+                    } 
+                }
 			}
 		});
 
@@ -586,4 +635,74 @@ function excluirVeic() {
             toggleModalEditVeic({})
         })
         .catch(err => console.error(err));
+}
+
+function toggleShowDash(num) {
+    document.querySelectorAll('.radio-opt-dash').forEach(o => {
+        if (!o.classList.contains('radio-opt-dash-' + num)) {
+            o.classList.remove('radio-opt-active')
+        }else{
+            o.classList.add('radio-opt-active')
+        }
+    })
+}
+
+function carregarManutencoes() {
+    const options = {method: 'GET'};
+
+    fetch('http://localhost:3000/agrotech/manutencoes', options)
+    .then(response => response.json())
+    .then(response => {
+        response.forEach(m => {
+            let tr = document.createElement('tr')
+            let placa = document.createElement('td')
+            let tipo = document.createElement('td')
+            let desc = document.createElement('td')
+            let inicio = document.createElement('td')
+            let fim = document.createElement('td')
+            let valor = document.createElement('td')
+
+            placa.innerHTML = m.veiculo.placa
+            tipo.innerHTML = m.veiculo.tipo.slice(0,1).toUpperCase() + m.veiculo.tipo.slice(1)
+            desc.innerHTML = m.descricao
+            inicio.innerHTML = new Date(m.data_inicio).toLocaleString('pt-br')
+            fim.innerHTML = m.data_fim !== null ? new Date(m.data_fim).toLocaleString('pt-br') : '-'
+            valor.innerHTML = m.valor
+
+            tr.append(placa, tipo, desc, inicio, fim, valor)
+
+            document.getElementById('veicManTableBody').appendChild(tr)
+        })
+    })
+    .catch(err => console.error(err));
+}
+
+function carregarOperacoes() {
+    const options = {method: 'GET'};
+
+    fetch('http://localhost:3000/agrotech/operacoes', options)
+    .then(response => response.json())
+    .then(response => {
+        response.forEach(o => {
+            let tr = document.createElement('tr')
+            let placa = document.createElement('td')
+            let tipo = document.createElement('td')
+            let desc = document.createElement('td')
+            let inicio = document.createElement('td')
+            let fim = document.createElement('td')
+            let motor = document.createElement('td')
+
+            placa.innerHTML = o.veiculo.placa
+            tipo.innerHTML = o.veiculo.tipo.slice(0,1).toUpperCase() + o.veiculo.tipo.slice(1)
+            desc.innerHTML = o.descricao
+            inicio.innerHTML = new Date(o.data_saida).toLocaleString('pt-br')
+            fim.innerHTML = o.data_fim !== null ? new Date(o.data_retorno).toLocaleString('pt-br') : '-'
+            motor.innerHTML = o.motorista.nome
+
+            tr.append(placa, tipo, desc, inicio, fim, motor)
+
+            document.getElementById('veicOpTableBody').appendChild(tr)
+        })
+    })
+    .catch(err => console.error(err));
 }
