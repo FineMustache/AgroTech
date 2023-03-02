@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Home - AgroTech</title>
     <script>
         let uinfo = window.localStorage.getItem('@uinfo')
@@ -59,6 +60,57 @@
 
     </div>
     <main>
+        <div class="main-dashboard main" id="mainDash">
+            <div class="page-top">
+                <div class="showVeic">
+                        
+                    <div class="wrap-radio">
+                        <div onclick="toggleShowVeic(1, 2)" class="radio-opt-1 radio-opt-active">
+                            <span>Geral</span>
+                        </div>
+                        <div onclick="toggleShowVeic(2, 1)" class="radio-opt-2">
+                            <span>Segmentado</span>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+            <div class="dashboard-disp">
+                <div class="container">
+                    <div class="card">
+                        <h2>Motoristas</h2>
+                        <div id="chart-container">
+                            <canvas id="doughnut-chart-disp-mot"></canvas>
+                            <div class="chart-center">
+                                <span>Total</span>
+                                <span id="sum-value-disp-mot"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h2>Veículos</h2>
+                        <div id="chart-container">
+                            <canvas id="doughnut-chart-disp-veic"></canvas>
+                            <div class="chart-center">
+                                <span>Total</span>
+                                <span id="sum-value-disp-veic"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome do Motorista</th>
+                            <th>CPF</th>
+                            <th>CNH</th>
+                            <th>Disponível</th>
+                        </tr>
+                    </thead>
+                    <tbody id="motoristasTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div class="main-motoristas main" id="mainMot">
             <div class="page-top">
                 <button class="btnCadastrar" onclick="toggleModalCreateMotorista()">Cadastrar</button>

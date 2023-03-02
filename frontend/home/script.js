@@ -38,6 +38,55 @@ function carregarMotoristas() {
 
             document.querySelector('.page-motoristas').appendChild(modelo)
         })
+        let nLivre = response.reduce((count, obj) => obj.disponivel ? count + 1 : count, 0)
+        let nOcupado = response.reduce((count, obj) => !obj.disponivel ? count + 1 : count, 0)
+        var ctx = document.getElementById('doughnut-chart-disp-mot').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+				labels: ['Ocupado', 'Livre'],
+				datasets: [{
+                    label: 'Motoristas',
+					data: [nOcupado, nLivre],
+					backgroundColor: [
+						'#c00',
+						'#00ffab',
+					],
+					hoverOffset: 4
+				}]
+			},
+			options: {
+				cutout: '70%',
+				plugins: {
+					legend: {
+						display: false
+					},
+					tooltip: {
+						enabled: true,
+                        padding: 10,
+                        
+					},
+					datalabels: {
+						color: '#ffffff',
+						font: {
+							size: 20
+						},
+						formatter: function(value, context) {
+							var sum = 0;
+							var dataArr = context.chart.data.datasets[0].data;
+							dataArr.map(function(data) {
+								sum += data;
+							});
+							var percentage = ((value * 100) / sum).toFixed(2) + "%";
+							return percentage;
+						}
+					}
+				}
+			}
+		});
+
+		var centerValue = document.querySelector('#sum-value-disp-mot');
+		centerValue.textContent = myChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
     })
     .catch(err => console.error(err));
 }
@@ -298,6 +347,90 @@ function carregarVeiculos() {
                 document.querySelector('#veicGeral').querySelector('.table-body').appendChild(modelo)
             })
         }
+
+        let nLivre = response.reduce((count, obj) => obj.disponivel ? count + 1 : count, 0)
+        let nOcupado = response.reduce((count, obj) => !obj.disponivel ? count + 1 : count, 0)
+        let nManutencao = 0
+        response.forEach(v => {
+            if (v.manutencoes.length > 0) {
+                if(v.manutencoes.at(-1).data_fim == null){
+                    nManutencao++
+                }
+            }
+        })
+        // let nManutencao = response.reduce((count, obj) => obj.manutencoes.length > 0 ? (obj.manutencoes.at(-1).data_fim == null ? count + 1 : count, 0) : count, 0)
+        let nOp = response.reduce((count, obj) => obj.operacoes.length > 0 ? (obj.operacoes.at(-1).data_retorno == null ? count + 1 : count, 0) : count, 0)
+        let nOutros = nOcupado - nManutencao - nOp
+        console.log(nManutencao, nOp, nOutros)
+        var ctx = document.getElementById('doughnut-chart-disp-veic').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+                    label: 'Veículos',
+					data: [nOcupado, nLivre],
+					backgroundColor: [
+						'#c00',
+						'#00ffab',
+					],
+					hoverOffset: 4,
+                    labels: ['Ocupado', 'Livre'],
+				},
+                {
+                    data: [
+                        nManutencao,
+                      nOp,
+                      nOutros,
+                      nLivre
+                    ],
+                    backgroundColor: [
+                      "rgb(255, 150, 0)", // red
+                      "rgb(0, 255, 0)", // green
+                      "rgb(0, 0, 255)", //blue
+                      "#00ffab", //blue
+                    ],
+                    labels: ['Em Manutenção', 'Em Operação', 'Outros', 'Livre']
+                  }]
+			},
+			options: {
+				cutout: '70%',
+				plugins: {
+					legend: {
+						display: false
+					},
+					tooltip: {
+						enabled: true,
+                        padding: 10,
+                        callbacks: {
+                            label: function(data) {
+                                console.log(data)
+                              var label = data.dataset.labels !== undefined ? data.dataset.labels[data.dataIndex] : data.dataset.label;
+                              var value = data.dataset.data[data.dataIndex];
+                              return label + ': ' + value;
+                            }
+                          }
+					},
+					datalabels: {
+						color: '#ffffff',
+						font: {
+							size: 20
+						},
+						formatter: function(value, context) {
+							var sum = 0;
+							var dataArr = context.chart.data.datasets[0].data;
+							dataArr.map(function(data) {
+								sum += data;
+							});
+							var percentage = ((value * 100) / sum).toFixed(2) + "%";
+							return percentage;
+						}
+					}
+				}
+			}
+		});
+
+		var centerValue = document.querySelector('#sum-value-disp-veic');
+		centerValue.textContent = myChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
     })
     .catch(err => console.error(err));   
 }
