@@ -529,3 +529,198 @@ input:focus {
     color: white;
     cursor: pointer;
 }
+
+.veiculos-geral{
+  background-color: white;
+  position: relative;
+  padding: 15px;
+  display: flex;
+  overflow: auto;
+  flex: 1;
+}
+
+.vg-table-container{
+  width: 100%;
+}
+
+#veicGeral{
+  width: 100%;
+  overflow-y: hidden;
+  position: relative;
+}
+
+#veicGeral .table-body div span{
+  border-right: 2px solid #006e4a;
+  padding: 15px;
+}
+
+#veicGeral .table-body div span:last-child{
+  border-right: none;
+}
+
+#veicGeral .table-body div{
+  border-top: 2px solid #006e4a;
+  cursor: pointer;
+}
+
+.vgBg{
+  position: absolute;
+  z-index: 0;
+  opacity: 0.05;
+  right: 0;
+  bottom: -60px;
+  width: 300px;
+  pointer-events: none;
+}
+
+.table-head{
+  width: 100%;
+  background-color: #006e4a;
+  color: white;
+  display: flex;
+}
+
+.table-head > span{
+  display: inline-block;
+  text-align: center;
+  margin: 0;
+}
+
+.table-head > span:nth-child(1){
+  width: 15%;
+}
+
+.table-head > span:nth-child(2){
+  width: 25%;
+}
+
+.table-head > span:nth-child(3){
+  width: 15%;
+}
+
+.table-head > span:nth-child(4){
+  width: 10%;
+}
+
+.table-head > span:nth-child(5){
+  width: 15%;
+}
+
+.table-head > span:nth-child(6){
+  width: 10%;
+}
+
+.table-head > span:nth-child(7){
+  width: 10%;
+}
+
+.table-body > div{
+  display: flex;
+  width: 100%;
+}
+
+.table-body span{
+  display: block;
+}
+
+.table-body div > span:nth-child(1){
+  width: 15%;
+}
+
+.table-body div > span:nth-child(2){
+  width: 25%;
+}
+
+.table-body div > span:nth-child(3){
+  width: 15%;
+}
+
+.table-body div > span:nth-child(4){
+  width: 10%;
+}
+
+.table-body div > span:nth-child(5){
+  width: 15%;
+}
+
+.table-body div > span:nth-child(6){
+  width: 10%;
+}
+
+.table-body div > span:nth-child(7){
+  width: 10%;
+}
+
+#vgModelo{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-head span{
+  border-right: 2px solid #fff;
+  padding: 15px;
+}
+
+.table-head span:last-child{
+  border-right: none;
+}
+
+.veic-info:hover{
+  background-color: #eee;
+}
+
+.veic-info{
+  position: relative;
+  display: flex;
+  width: 100%;
+  border: none!important;
+}
+
+.row-options{
+  display: flex;
+  background-color: #006e4a;
+  gap: 10px;
+  height: 0;
+  align-items: center;
+  cursor: default!important;
+  transition: .5s;
+  overflow: hidden;
+  border: none!important;
+}
+
+.row-options-expand{
+  height: 50px!important;
+}
+
+.btnEditarVeicGeral{
+  background-color: #00df9c;
+  border: 2px solid #fff;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.btnExcluirVeicGeral{
+  background-color: #b40000;
+  border: 2px solid #fff;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.modeloVeicGeral{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-body{
+  overflow-y: auto;
+}
+
+#inpTipo{
+  flex: 1;
+  padding: 5px;
+}

@@ -13,6 +13,7 @@ function togglesbi(ev, mainId) {
 
 function carregar() {
     carregarMotoristas()
+    carregarVeiculos()
 }
 
 function carregarMotoristas() {
@@ -47,6 +48,7 @@ function toggleModalEditMotorista(card){
         document.querySelector('.modal-edit-motorista').querySelector('#inpNome').value = card.querySelector('#nome').innerHTML
         document.querySelector('.modal-edit-motorista').querySelector('#inpCpf').value = card.querySelector('#cpf').innerHTML
         document.querySelector('.modal-edit-motorista').querySelector('#inpCnh').value = card.querySelector('#cnh').innerHTML
+        document.querySelector('.modal-edit-motorista').querySelector('#nop').innerHTML = card.querySelector('#nop').innerHTML
         document.querySelector('.modal-edit-motorista').querySelector('#inpId').value = card.id.slice(1)
     } else {
         document.querySelector('.modal-edit-motorista').querySelector('#inpNome').value = ""
@@ -270,4 +272,185 @@ function validarToken() {
 function toggleShowVeic(num, num2) {
     document.querySelector('.radio-opt-' + num).classList.add('radio-opt-active')
     document.querySelector('.radio-opt-' + num2).classList.remove('radio-opt-active')
+}
+
+function carregarVeiculos() {
+    const options = {method: 'GET'};
+
+    fetch('http://localhost:3000/agrotech/veiculos', options)
+    .then(response => response.json())
+    .then(response => {
+        if (document.querySelector('.radio-opt-1').classList.contains('radio-opt-active')) {
+            response.forEach(v => {
+                let modelo = document.querySelector('.modeloVeicGeral').cloneNode(true)
+                modelo.querySelector('#vgPlaca').innerHTML = v.placa
+                modelo.querySelector('#vgModelo').innerHTML = v.modelo
+                modelo.querySelector('#vgMarca').innerHTML = v.marca
+                modelo.querySelector('#vgTipo').innerHTML = v.tipo.slice(0, 1).toUpperCase() + v.tipo.slice(1)
+                modelo.querySelector('#vgDisp').innerHTML = v.disponivel ? "Livre" : "Ocupado"
+                modelo.querySelector('#vgNop').innerHTML = v.operacoes.length
+                modelo.querySelector('#vgNman').innerHTML = v.manutencoes.length
+                modelo.addEventListener('click', () => toggleModalEditVeic(v))
+                modelo.setAttribute('disponibilidade', v.disponivel)
+
+                modelo.classList.remove('escondido')
+
+                document.querySelector('#veicGeral').querySelector('.table-body').appendChild(modelo)
+            })
+        }
+    })
+    .catch(err => console.error(err));   
+}
+
+function toggleModalEditVeic(v) {
+    console.log(v)
+    if (v.id !== undefined) {
+        console.log(v.tipo)
+        document.querySelector('.modal-edit-veic').querySelector('#inpPlaca').value = v.placa
+        document.querySelector('.modal-edit-veic').querySelector('#inpModelo').value = v.modelo
+        document.querySelector('.modal-edit-veic').querySelector('#inpMarca').value = v.marca
+        document.querySelector('.modal-edit-veic').querySelector('#inpTipo').value = v.tipo
+        document.querySelector('.modal-edit-veic').querySelector('#nop').innerHTML = v.operacoes.length
+        document.querySelector('.modal-edit-veic').querySelector('#nman').innerHTML = v.manutencoes.length
+        document.querySelector('.modal-edit-veic').querySelector('#inpId').value = v.id
+    } else {
+        document.querySelector('.modal-edit-veic').querySelector('#inpPlaca').value = ""
+        document.querySelector('.modal-edit-veic').querySelector('#inpModelo').value = ""
+        document.querySelector('.modal-edit-veic').querySelector('#inpMarca').value = ""
+        document.querySelector('.modal-edit-veic').querySelector('#nop').innerHTML = ""
+        document.querySelector('.modal-edit-veic').querySelector('#nman').innerHTML = ""
+        document.querySelector('.modal-edit-veic').querySelector('#inpId').value = ""
+    }
+    document.querySelector('.modal-edit-veic').classList.toggle('escondido')
+    document.body.style.overflow = 'hidden'
+}
+
+function toggleModalCreateVeic() {
+    document.querySelector('.modal-create-veic').querySelector('#inpPlaca').value = ""
+    document.querySelector('.modal-create-veic').querySelector('#inpModelo').value = ""
+    document.querySelector('.modal-create-veic').querySelector('#inpMarca').value = ""
+    document.querySelector('.modal-create-veic').querySelector('#inpId').value = ""
+
+    document.querySelector('.modal-create-veic').classList.toggle('escondido')
+    document.body.style.overflow = 'hidden'
+}
+
+function toggleFilterVeic() {
+    document.querySelector('.main-veiculos').querySelector('.filter-db').classList.toggle('escondido')
+}
+
+function filterVeicChange() {
+    let cbDisp = document.querySelector("#cbVeicDisp")
+    let cbInd = document.querySelector("#cbVeicInd")
+    let cards = document.querySelector('.page-veiculos').querySelectorAll('.modeloVeicGeral')
+
+    if (cbDisp.checked) {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "true") {
+                    c.classList.remove('escondido')
+                }
+            }
+            
+        })
+    } else {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "true") {
+                    c.classList.add('escondido')
+                }
+            }
+            
+        })
+    }
+
+    if (cbInd.checked) {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "false") {
+                    c.classList.remove('escondido')
+                }
+            }
+            
+        })
+
+    } else {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('disponibilidade') == "false") {
+                    c.classList.add('escondido')
+                }
+            }
+            
+        })
+    }
+}
+
+function editVeic() {
+    const placa = document.querySelector('.modal-edit-veic').querySelector('#inpPlaca').value
+    const modelo = document.querySelector('.modal-edit-veic').querySelector('#inpModelo').value
+    const marca = document.querySelector('.modal-edit-veic').querySelector('#inpMarca').value
+    const tipo = document.querySelector('.modal-edit-veic').querySelector('#inpTipo').value
+    const id = document.querySelector('.modal-edit-veic').querySelector('#inpId').value
+
+    const options = {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: `{"id":${id},"placa":"${placa}","modelo":"${modelo}", "marca": "${marca}","tipo":"${tipo}"}`
+      };
+      
+      fetch('http://localhost:3000/agrotech/veiculos', options)
+        .then(response => response.json())
+        .then(response => {
+            let modelo = document.querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+            document.querySelector('.table-body').innerHTML = ""
+            document.querySelector('.table-body').appendChild(modelo)
+            carregarVeiculos()
+            toggleModalEditVeic({})
+        })
+        .catch(err => console.error(err));
+}
+
+function cadastrarVeiculo() {
+    const placa = document.querySelector('.modal-create-veic').querySelector('#inpPlaca').value
+    const modelo = document.querySelector('.modal-create-veic').querySelector('#inpModelo').value
+    const marca = document.querySelector('.modal-create-veic').querySelector('#inpMarca').value
+    const tipo = document.querySelector('.modal-create-veic').querySelector('#inpTipo').value
+
+    const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: `{"placa":"${placa}","modelo":"${modelo}", "marca": "${marca}","tipo":"${tipo}"}`
+      };
+      
+      fetch('http://localhost:3000/agrotech/veiculos', options)
+        .then(response => response.json())
+        .then(response => {
+            let modelo = document.querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+            document.querySelector('.table-body').innerHTML = ""
+            document.querySelector('.table-body').appendChild(modelo)
+            carregarVeiculos()
+            toggleModalCreateVeic({})
+        })
+        .catch(err => console.error(err));
+}
+
+function excluirVeic() {
+    const id = document.querySelector('.modal-edit-veic').querySelector('#inpId').value
+    const options = {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: `{"id":${id}}`
+      };
+      
+      fetch('http://localhost:3000/agrotech/veiculos', options)
+        .then(response => response.json())
+        .then(response => {
+            let modelo = document.querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+            document.querySelector('.table-body').innerHTML = ""
+            document.querySelector('.table-body').appendChild(modelo)
+            carregarVeiculos()
+            toggleModalEditVeic({})
+        })
+        .catch(err => console.error(err));
 }
