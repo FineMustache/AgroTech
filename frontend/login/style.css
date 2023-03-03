@@ -123,3 +123,60 @@ main{
     height: 100%;
     padding: 0 35vw ;
 }
+
+@media screen and (max-width: 768px) {
+    header {
+      height: 12vh;
+    }
+    nav {
+      font-size: 18pt;
+    }
+    .card-login {
+      flex-direction: column;
+    }
+    .left {
+      flex: 1;
+      padding: 1rem;
+    }
+    .left > span:first-child {
+      font-size: 24pt;
+    }
+    .left > p {
+      font-size: 12pt;
+    }
+    .right {
+      flex: 1;
+      padding: 1rem;
+    }
+    .form {
+      height: auto;
+    }
+  }
+  
+  @media screen and (max-width: 576px) {
+    header {
+      height: 15vh;
+    }
+    nav {
+      font-size: 16pt;
+    }
+    .left {
+      padding: 0.5rem;
+    }
+    .left > span:first-child {
+      font-size: 20pt;
+    }
+    .left > p {
+      font-size: 10pt;
+    }
+    .right {
+      padding: 0.5rem;
+    }
+    input {
+      font-size: 12pt;
+    }
+    button {
+      font-size: 16pt;
+    }
+  }
+  

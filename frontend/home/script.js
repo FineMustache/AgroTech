@@ -364,9 +364,6 @@ function carregarVeiculos() {
         let nOp = response.reduce((count, obj) => obj.operacoes.length > 0 ? (obj.operacoes.at(-1).data_retorno == null ? count + 1 : count, 0) : count, 0)
         let nOutros = nOcupado - nManutencao - nOp
 
-        nManutencao = 1
-        nOp = 1
-
         var ctx = document.getElementById('doughnut-chart-disp-veic').getContext('2d');
 		var myChart = new Chart(ctx, {
 			type: 'doughnut',
@@ -384,9 +381,9 @@ function carregarVeiculos() {
                 {
                     data: [
                         nManutencao,
-                      nOp,
-                      nOutros,
-                      nLivre
+                        nOp,
+                        nOutros,
+                        nLivre
                     ],
                     backgroundColor: [
                       "rgb(255, 150, 0)", // red
@@ -684,24 +681,27 @@ function carregarOperacoes() {
     .then(response => response.json())
     .then(response => {
         response.forEach(o => {
-            let tr = document.createElement('tr')
-            let placa = document.createElement('td')
-            let tipo = document.createElement('td')
-            let desc = document.createElement('td')
-            let inicio = document.createElement('td')
-            let fim = document.createElement('td')
-            let motor = document.createElement('td')
+            if (o.data_fim == null) {
+                let tr = document.createElement('tr')
+                let placa = document.createElement('td')
+                let tipo = document.createElement('td')
+                let desc = document.createElement('td')
+                let inicio = document.createElement('td')
+                let fim = document.createElement('td')
+                let motor = document.createElement('td')
 
-            placa.innerHTML = o.veiculo.placa
-            tipo.innerHTML = o.veiculo.tipo.slice(0,1).toUpperCase() + o.veiculo.tipo.slice(1)
-            desc.innerHTML = o.descricao
-            inicio.innerHTML = new Date(o.data_saida).toLocaleString('pt-br')
-            fim.innerHTML = o.data_fim !== null ? new Date(o.data_retorno).toLocaleString('pt-br') : '-'
-            motor.innerHTML = o.motorista.nome
+                placa.innerHTML = o.veiculo.placa
+                tipo.innerHTML = o.veiculo.tipo.slice(0,1).toUpperCase() + o.veiculo.tipo.slice(1)
+                desc.innerHTML = o.descricao
+                inicio.innerHTML = new Date(o.data_saida).toLocaleString('pt-br')
+                fim.innerHTML = o.data_fim !== null ? new Date(o.data_retorno).toLocaleString('pt-br') : '-'
+                motor.innerHTML = o.motorista.nome
 
-            tr.append(placa, tipo, desc, inicio, fim, motor)
+                tr.append(placa, tipo, desc, inicio, fim, motor)
 
-            document.getElementById('veicOpTableBody').appendChild(tr)
+                document.getElementById('veicOpTableBody').appendChild(tr)
+            }
+            
         })
     })
     .catch(err => console.error(err));
