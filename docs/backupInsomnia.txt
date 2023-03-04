@@ -1,0 +1,218 @@
+// Motoristas
+[
+	{
+		"cpf": "123.456.789-00",
+		"cnh": "1234567890",
+		"nome": "José Silva"
+	},
+	{
+		"cpf": "987.654.321-00",
+		"cnh": "0987654321",
+		"nome": "Maria Souza"
+	},
+	{
+		"cpf": "456.789.123-00",
+		"cnh": "4567891230",
+		"nome": "João Pereira"
+	},
+	{
+		"cpf": "321.654.987-00",
+		"cnh": "3216549870",
+		"nome": "Ana Oliveira"
+	}
+]
+
+// Veículos
+[
+  {
+    "placa": "ABC-1234",
+    "modelo": "Fiorino",
+    "marca": "Fiat",
+    "tipo": "carga",
+    "disponivel": true
+  },
+  {
+    "placa": "DEF-5678",
+    "modelo": "Civic",
+    "marca": "Honda",
+    "tipo": "vendas",
+    "disponivel": true
+  },
+  {
+    "placa": "GHI-9012",
+    "modelo": "Uno",
+    "marca": "Fiat",
+    "tipo": "visita",
+    "disponivel": true
+  },
+  {
+    "placa": "JKL-3456",
+    "modelo": "Hilux",
+    "marca": "Toyota",
+    "tipo": "carga",
+    "disponivel": true
+  }
+]
+
+// Manutenções
+[
+  {
+    "data_inicio": "2022-02-10T15:43:30.000Z",
+    "data_fim": null,
+    "valor": 1500.0,
+    "descricao": "Revisão geral",
+    "id_veiculo": 1
+  },
+  {
+    "data_inicio": "2022-02-15T10:22:15.000Z",
+    "data_fim": null,
+    "valor": 500.0,
+    "descricao": "Troca de óleo",
+    "id_veiculo": 3
+  },
+  {
+    "data_inicio": "2022-02-20T14:00:00.000Z",
+    "data_fim": "2022-02-23T09:30:00.000Z",
+    "valor": 2500.0,
+    "descricao": "Manutenção preventiva",
+    "id_veiculo": 4
+  }
+]
+
+// Operações
+[
+  {
+    "id_motorista": 1,
+    "id_veiculo": 2,
+    "data_saida": "2022-03-01T08:30:00.000Z",
+    "data_retorno": null,
+    "descricao": "Visita aos clientes"
+  },
+  {
+    "id_motorista": 3,
+    "id_veiculo": 1,
+    "data_saida": "2022-02-28T14:00:00.000Z",
+    "data_retorno": null,
+    "descricao": "Transporte de carga"
+  },
+  {
+    "id_motorista": 2,
+    "id_veiculo": 3,
+    "data_saida": "2022-03-02T09:15:00.000Z",
+    "data_retorno": null,
+    "descricao": "Vendas externas"
+  }
+]
+
+
+____________________ANTIGO__________________________
+
+//motoristas
+[
+	{
+		"cpf": "181.736.500-20",
+		"cnh": "49373308160",
+		"nome": "Bryan Luiz Diego Souza"
+	},
+	{
+		"cpf": "097.360.892-74",
+		"cnh": "67317903161",
+		"nome": "Pedro Oliver Francisco Sales"
+	},
+	{
+		"cpf": "184.348.544-30",
+		"cnh": "30414202386",
+		"nome": "Eduardo Nicolas Mendes"
+	},
+	{
+		"cpf": "342.864.594-46",
+		"cnh": "73287600434",
+		"nome": "Arthur Yago Joaquim da Paz"
+	},
+	{
+		"cpf": "989.305.411-78",
+		"cnh": "48246373099",
+		"nome": "Marcos Vinicius Carlos Eduardo Diogo Nogueira"
+	}
+]
+
+//veiculos
+
+[
+	{
+		"placa": "JTS-1200",
+		"modelo": "FH EC 460",
+		"marca": "Volvo",
+		"tipo": "carga"
+	},
+	{
+		"placa": "HOQ-5627",
+		"modelo": "FH 540",
+		"marca": "Volvo",
+		"tipo": "carga"
+	},
+	{
+		"placa": "GLH-4687",
+		"modelo": "EDGE SEL 3.5 V6  24V FWD Aut.",
+		"marca": "Ford",
+		"tipo": "visita"
+	},
+	{
+		"placa": "MWE-4573",
+		"modelo": "Fox PEPPER 1.6 Flex 16V 5p",
+		"marca": "VolksWagen",
+		"tipo": "vendas"
+	},
+	{
+		"placa": "FEL-2202",
+		"modelo": "SANDERO Privilege",
+		"marca": "Renault",
+		"tipo": "vendas"
+	}
+]
+
+//manutencao
+
+[
+	{
+		"descricao": "Alinhamento e Cambagem",
+		"valor": 120,
+		"id_veiculo": 1
+	},
+	{
+		"descricao": "Troca de Óleo e Filtro",
+		"valor": 280,
+		"id_veiculo": 3
+	},
+	{
+		"descricao": "Troca de Pastilhas de Freio",
+		"valor": 90,
+		"id_veiculo": 5
+	}
+]
+
+//operacao
+
+[
+	{
+		"id_motorista": 1,
+		"id_veiculo": 1,
+		"data_saida": "2023-02-20T06:00:00Z",
+		"data_retorno": "2023-02-20T12:00:00Z",
+		"descricao": "Transporte de Carga"
+	},
+	{
+		"id_motorista": 2,
+		"id_veiculo": 2,
+		"data_saida": "2023-02-19T09:00:00Z",
+		"data_retorno": "2023-02-20T17:00:00Z",
+		"descricao": "Transporte de Carga"
+	},
+	{
+		"id_motorista": 3,
+		"id_veiculo": 2,
+		"data_saida": "2023-02-19T17:00:00Z",
+		"data_retorno": "2023-02-21T05:00:00Z",
+		"descricao": "Transporte de Carga"
+	}
+]
