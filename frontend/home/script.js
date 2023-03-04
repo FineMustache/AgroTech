@@ -354,14 +354,22 @@ function carregarVeiculos() {
         let nOcupado = response.reduce((count, obj) => !obj.disponivel ? count + 1 : count, 0)
         let nManutencao = 0
         response.forEach(v => {
-            if (v.manutencoes.length > 0) {
-                if(v.manutencoes.at(-1).data_fim == null){
+            v.manutencoes.forEach(m => {
+                if(m.data_fim == null){
                     nManutencao++
                 }
-            }
+            })
         })
         // let nManutencao = response.reduce((count, obj) => obj.manutencoes.length > 0 ? (obj.manutencoes.at(-1).data_fim == null ? count + 1 : count, 0) : count, 0)
-        let nOp = response.reduce((count, obj) => obj.operacoes.length > 0 ? (obj.operacoes.at(-1).data_retorno == null ? count + 1 : count, 0) : count, 0)
+        let nOp = 0
+        response.forEach(v => {
+            v.operacoes.forEach(o => {
+                if(o.data_retorno == null){
+                    nOp++
+                }
+            })
+        })
+
         let nOutros = nOcupado - nManutencao - nOp
 
         var ctx = document.getElementById('doughnut-chart-disp-veic').getContext('2d');
@@ -642,6 +650,19 @@ function toggleShowDash(num) {
             o.classList.add('radio-opt-active')
         }
     })
+
+    switch (num) {
+        case 2:
+            document.querySelector('.dashboard-disp').classList.remove('graf-escondido')
+            document.querySelector('.dashboard-man').classList.add('graf-escondido')
+            break;
+        case 3:
+            document.querySelector('.dashboard-disp').classList.add('graf-escondido')
+            document.querySelector('.dashboard-man').classList.remove('graf-escondido')
+            break;
+        default:
+            break;
+    }
 }
 
 function carregarManutencoes() {
@@ -651,25 +672,155 @@ function carregarManutencoes() {
     .then(response => response.json())
     .then(response => {
         response.forEach(m => {
-            let tr = document.createElement('tr')
-            let placa = document.createElement('td')
-            let tipo = document.createElement('td')
-            let desc = document.createElement('td')
-            let inicio = document.createElement('td')
-            let fim = document.createElement('td')
-            let valor = document.createElement('td')
-
-            placa.innerHTML = m.veiculo.placa
-            tipo.innerHTML = m.veiculo.tipo.slice(0,1).toUpperCase() + m.veiculo.tipo.slice(1)
-            desc.innerHTML = m.descricao
-            inicio.innerHTML = new Date(m.data_inicio).toLocaleString('pt-br')
-            fim.innerHTML = m.data_fim !== null ? new Date(m.data_fim).toLocaleString('pt-br') : '-'
-            valor.innerHTML = m.valor
-
-            tr.append(placa, tipo, desc, inicio, fim, valor)
-
-            document.getElementById('veicManTableBody').appendChild(tr)
+            if (m.data_fim == null) {
+                let tr = document.createElement('tr')
+                let placa = document.createElement('td')
+                let tipo = document.createElement('td')
+                let desc = document.createElement('td')
+                let inicio = document.createElement('td')
+                let fim = document.createElement('td')
+                let valor = document.createElement('td')
+    
+                placa.innerHTML = m.veiculo.placa
+                tipo.innerHTML = m.veiculo.tipo.slice(0,1).toUpperCase() + m.veiculo.tipo.slice(1)
+                desc.innerHTML = m.descricao
+                inicio.innerHTML = new Date(m.data_inicio).toLocaleString('pt-br')
+                fim.innerHTML = m.data_fim !== null ? new Date(m.data_fim).toLocaleString('pt-br') : '-'
+                valor.innerHTML = m.valor
+    
+                tr.append(placa, tipo, desc, inicio, fim, valor)
+    
+                document.getElementById('veicManTableBody').appendChild(tr)   
+            }
         })
+
+        // gerar gráfico de frequência de manutenções por tipo de veículo
+        const freqManutencoes = {};
+        response.forEach(manutencao => {
+        const tipoVeiculo = manutencao.veiculo.tipo;
+        if (!freqManutencoes[tipoVeiculo]) {
+            freqManutencoes[tipoVeiculo] = 1;
+        } else {
+            freqManutencoes[tipoVeiculo]++;
+        }
+        });
+
+        const labelsFreq = Object.keys(freqManutencoes).map(k => k = k.slice(0,1).toUpperCase() + k.slice(1));
+        const dataFreq = Object.values(freqManutencoes);
+        document.querySelector('#sum-value-man').innerHTML = response.length
+
+        console.log(labelsFreq, dataFreq)
+
+        const graficoFreq = new Chart(document.getElementById('grafico-freq'), {
+        type: 'doughnut',
+        data: {
+            labels: labelsFreq,
+            datasets: [{
+            label: 'Frequência de Manutenções',
+            data: dataFreq,
+            backgroundColor: [
+                'rgba(255, 99, 132)',
+                'rgba(54, 162, 235)',
+                'rgba(255, 206, 86)'
+            ],
+            borderColor: 'white',
+            borderWidth: 1
+            }]
+        },
+        options: {
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+        });
+
+        // gerar gráfico de custo médio de manutenções por tipo de veículo
+        const custoManutencoes = {};
+        response.forEach(manutencao => {
+        const tipoVeiculo = manutencao.veiculo.tipo;
+        const valorManutencao = manutencao.valor;
+        if (!custoManutencoes[tipoVeiculo]) {
+            custoManutencoes[tipoVeiculo] = {
+            total: valorManutencao,
+            qtd: 1
+            };
+        } else {
+            custoManutencoes[tipoVeiculo].total += valorManutencao;
+            custoManutencoes[tipoVeiculo].qtd++;
+        }
+        });
+
+        const labelsCusto = Object.keys(custoManutencoes);
+        const dataCusto = [];
+        labelsCusto.forEach(label => {
+        dataCusto.push(custoManutencoes[label].total / custoManutencoes[label].qtd);
+        });
+
+        const graficoCusto = new Chart(document.getElementById('grafico-custo'), {
+        type: 'bar',
+        data: {
+            labels: labelsCusto.map(k => k = k.slice(0,1).toUpperCase() + k.slice(1)),
+            datasets: [{
+            label: 'Custo Médio de Manutenções',
+            data: dataCusto,
+            backgroundColor: [
+                'rgba(255, 99, 132)',
+                'rgba(54, 162, 235)',
+                'rgba(255, 206, 86)'
+            ],
+            borderColor: 'white',
+            borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+        });
+
+        // ... código anterior
+
+        const dadosPreparados = prepararDadosParaDashboard(response)
+
+        // Calcula o tempo médio de manutenção por tipo de veículo
+        const tempoMedioManutencaoCarga = calcularTempoMedioManutencao(dadosPreparados.manutencoesCarga, "carga");
+        const tempoMedioManutencaoVendas = calcularTempoMedioManutencao(dadosPreparados.manutencoesVendas, "vendas");
+        const tempoMedioManutencaoVisita = calcularTempoMedioManutencao(dadosPreparados.manutencoesVisita, "visita");
+
+        // Cria o gráfico de tempo médio de manutenções por tipo de veículo
+        const tempoMedioManutencaoCtx = document.getElementById('tempo-medio-manutencao').getContext('2d');
+        const tempoMedioManutencaoChart = new Chart(tempoMedioManutencaoCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Carga', 'Vendas', 'Visita'],
+                datasets: [{
+                    label: 'Tempo Médio de Manutenção (dias)',
+                    data: [tempoMedioManutencaoCarga, tempoMedioManutencaoVendas, tempoMedioManutencaoVisita],
+                    backgroundColor: [
+                        'rgba(255, 99, 132)',
+                        'rgba(255, 206, 86)',
+                        'rgba(54, 162, 235)'
+                    ],
+                    borderColor: 'white',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // ... código posterior
     })
     .catch(err => console.error(err));
 }
@@ -681,7 +832,7 @@ function carregarOperacoes() {
     .then(response => response.json())
     .then(response => {
         response.forEach(o => {
-            if (o.data_fim == null) {
+            if (o.data_retorno == null) {
                 let tr = document.createElement('tr')
                 let placa = document.createElement('td')
                 let tipo = document.createElement('td')
@@ -694,7 +845,7 @@ function carregarOperacoes() {
                 tipo.innerHTML = o.veiculo.tipo.slice(0,1).toUpperCase() + o.veiculo.tipo.slice(1)
                 desc.innerHTML = o.descricao
                 inicio.innerHTML = new Date(o.data_saida).toLocaleString('pt-br')
-                fim.innerHTML = o.data_fim !== null ? new Date(o.data_retorno).toLocaleString('pt-br') : '-'
+                fim.innerHTML = o.data_retorno !== null ? new Date(o.data_retorno).toLocaleString('pt-br') : '-'
                 motor.innerHTML = o.motorista.nome
 
                 tr.append(placa, tipo, desc, inicio, fim, motor)
@@ -706,3 +857,109 @@ function carregarOperacoes() {
     })
     .catch(err => console.error(err));
 }
+
+// Função para agrupar manutenções por tipo de veículo
+function agruparManutencoesPorTipoVeiculo(manutencoes) {
+    const agrupado = manutencoes.reduce((obj, manutencao) => {
+      const tipo = manutencao.veiculo.tipo;
+      if (!obj[tipo]) {
+        obj[tipo] = [];
+      }
+      obj[tipo].push(manutencao);
+      return obj;
+    }, {});
+  
+    return agrupado;
+  }
+  
+  // Função para calcular a frequência média de manutenção por tipo de veículo
+  function calcularFrequenciaMediaManutencaoPorTipoVeiculo(manutencoesAgrupadasPorTipoVeiculo) {
+    const frequencias = {};
+    for (const tipo in manutencoesAgrupadasPorTipoVeiculo) {
+      const manutencoes = manutencoesAgrupadasPorTipoVeiculo[tipo];
+      const intervalos = [];
+      for (let i = 1; i < manutencoes.length; i++) {
+        const dataAnterior = new Date(manutencoes[i - 1].data_inicio);
+        const dataAtual = new Date(manutencoes[i].data_inicio);
+        const intervaloEmDias = (dataAtual - dataAnterior) / (1000 * 60 * 60 * 24);
+        intervalos.push(intervaloEmDias);
+      }
+      const frequenciaMedia = intervalos.reduce((acc, intervalo) => acc + intervalo, 0) / intervalos.length;
+      frequencias[tipo] = frequenciaMedia.toFixed(2);
+    }
+    return frequencias;
+  }
+
+  function calcularCustoMedioManutencaoPorTipoVeiculo(dadosManutencoes) {
+    const custoTotal = { carga: 0, venda: 0, visita: 0 };
+    const qtdManutencoes = { carga: 0, venda: 0, visita: 0 };
+  
+    dadosManutencoes.forEach((manutencao) => {
+      const tipoVeiculo = manutencao.veiculo.tipo;
+      custoTotal[tipoVeiculo] += manutencao.valor;
+      qtdManutencoes[tipoVeiculo] += 1;
+    });
+  
+    const custoMedio = {
+      carga: custoTotal.carga / qtdManutencoes.carga || 0,
+      venda: custoTotal.venda / qtdManutencoes.venda || 0,
+      visita: custoTotal.visita / qtdManutencoes.visita || 0,
+    };
+  
+    return custoMedio;
+  }
+
+
+  function calcularTempoMedioManutencao(manutencoes, tipoVeiculo) {
+    // Filtra as manutenções pelo tipo de veículo
+    const manutencoesFiltradas = manutencoes.filter(
+      (manutencao) => manutencao.veiculo.tipo === tipoVeiculo
+    );
+  
+    if (manutencoesFiltradas.length === 0) {
+      return 0;
+    }
+  
+    // Calcula o tempo total de manutenção em minutos
+    const tempoTotalManutencao = manutencoesFiltradas.reduce((total, manutencao) => {
+      const dataInicio = new Date(manutencao.data_inicio);
+      const dataFim = manutencao.data_fim ? new Date(manutencao.data_fim) : new Date();
+
+    let diferenca = Math.ceil((dataFim - dataInicio) / 86400000)
+      return total + diferenca
+    }, 0);
+
+    // Calcula o tempo médio de manutenção em minutos
+    const tempoMedioManutencao = tempoTotalManutencao / manutencoesFiltradas.length;
+    
+  
+    return tempoMedioManutencao;
+  }
+  
+
+  function prepararDadosParaDashboard(manutencoes) {
+    const manutencoesCarga = manutencoes.filter((manutencao) => manutencao.veiculo.tipo === 'carga');
+    const manutencoesVendas = manutencoes.filter((manutencao) => manutencao.veiculo.tipo === 'vendas');
+    const manutencoesVisita = manutencoes.filter((manutencao) => manutencao.veiculo.tipo === 'visita');
+  
+    const custoMedioManutencaoPorTipoVeiculo = {
+      carga: calcularCustoMedioManutencaoPorTipoVeiculo(manutencoesCarga),
+      vendas: calcularCustoMedioManutencaoPorTipoVeiculo(manutencoesVendas),
+      visita: calcularCustoMedioManutencaoPorTipoVeiculo(manutencoesVisita),
+    };
+  
+    const tempoMedioManutencaoPorTipoVeiculo = {
+      carga: calcularTempoMedioManutencao(manutencoesCarga),
+      vendas: calcularTempoMedioManutencao(manutencoesVendas),
+      visita: calcularTempoMedioManutencao(manutencoesVisita),
+    };
+  
+    return {
+      custoMedioManutencaoPorTipoVeiculo,
+      tempoMedioManutencaoPorTipoVeiculo,
+      manutencoesCarga,
+      manutencoesVendas,
+      manutencoesVisita,
+    };
+  }
+  

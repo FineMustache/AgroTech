@@ -2,7 +2,27 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
-const create = async (req, res) => {     
+const create = async (req, res) => {
+    req.body.forEach(async m => {
+        await prisma.veiculo.update({
+            where: {
+                id: m.id_veiculo
+            },
+            data: {
+                disponivel: false
+            }
+        })
+
+        await prisma.motorista.update({
+            where: {
+                id: m.id_motorista
+            },
+            data: {
+                disponivel: false
+            }
+        })  
+    })
+
     const operacao = await prisma.operacao.createMany({
         data: req.body
     }).catch((err) => {
@@ -72,10 +92,43 @@ const remove = async (req, res) => {
     res.status(200).json(operacao).end()
 }
 
+const finish = async (req, res) => {
+    req.body.id = Number(req.body.id)
+    const operacao = await prisma.operacao.update({
+        where: {
+            id: req.body.id
+        },
+        data: {
+            data_retorno: new Date().toISOString()
+        }
+    })
+
+    await prisma.veiculo.update({
+        where: {
+            id: operacao.id_veiculo
+        },
+        data: {
+            disponivel: true
+        }
+    })
+
+    await prisma.motorista.update({
+        where: {
+            id: operacao.id_motorista
+        },
+        data: {
+            disponivel: true
+        }
+    })
+
+    res.status(200).json(operacao).end()
+}
+
 module.exports = {
     create,
     readAll,
     read,
     update,
-    remove
+    remove,
+    finish
 }

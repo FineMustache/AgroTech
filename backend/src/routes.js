@@ -34,6 +34,7 @@ router.get('/agrotech/manutencoes', Manutencao.readAll)
 router.get('/agrotech/manutencoes/:id', Manutencao.read)
 router.put('/agrotech/manutencoes', Manutencao.update)
 router.delete('/agrotech/manutencoes', Manutencao.remove)
+router.put('/agrotech/manutencoes/finalizar', Manutencao.finish)
 
 //OPERAÇÕES
 router.post('/agrotech/operacoes', Operacao.create)
@@ -41,5 +42,6 @@ router.get('/agrotech/operacoes', Operacao.readAll)
 router.get('/agrotech/operacoes/:id', Operacao.read)
 router.put('/agrotech/operacoes', Operacao.update)
 router.delete('/agrotech/operacoes', Operacao.remove)
+router.put('/agrotech/operacoes/finalizar', Operacao.finish)
 
 module.exports = router

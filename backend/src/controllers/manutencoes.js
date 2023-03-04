@@ -2,7 +2,19 @@ const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
-const create = async (req, res) => {     
+const create = async (req, res) => {
+    
+    req.body.forEach(async m => {
+        await prisma.veiculo.update({
+            where: {
+                id: m.id_veiculo
+            },
+            data: {
+                disponivel: false
+            }
+        })
+    })
+
     const manutencao = await prisma.manutencao.createMany({
         data: req.body
     }).catch((err) => {
@@ -68,10 +80,34 @@ const remove = async (req, res) => {
     res.status(200).json(manutencao).end()
 }
 
+const finish = async (req, res) => {
+    req.body.id = Number(req.body.id)
+    const manutencao = await prisma.manutencao.update({
+        where: {
+            id: req.body.id
+        },
+        data: {
+            data_fim: new Date().toISOString()
+        }
+    })
+
+    await prisma.veiculo.update({
+        where: {
+            id: manutencao.id_veiculo
+        },
+        data: {
+            disponivel: true
+        }
+    })
+
+    res.status(200).json(manutencao).end()
+}
+
 module.exports = {
     create,
     readAll,
     read,
     update,
-    remove
+    remove,
+    finish
 }

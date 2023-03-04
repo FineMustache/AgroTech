@@ -84,21 +84,53 @@
                 <div class="container">
                     <div class="card">
                         <h2>Motoristas</h2>
-                        <div id="chart-container">
+                        <div class="chart-container">
                             <canvas id="doughnut-chart-disp-mot"></canvas>
                             <div class="chart-center">
                                 <span>Total</span>
                                 <span id="sum-value-disp-mot"></span>
                             </div>
                         </div>
+                        <div class="card-leg legenda-grafico-disp-mot">
+                            <div class="leg leg-livre">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Livre</span>
+                            </div>
+                            <div class="leg leg-ocupado">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Ocupado</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="card">
                         <h2>Veículos</h2>
-                        <div id="chart-container">
+                        <div class="chart-container">
                             <canvas id="doughnut-chart-disp-veic"></canvas>
                             <div class="chart-center">
                                 <span>Total</span>
                                 <span id="sum-value-disp-veic"></span>
+                            </div>
+                        </div>
+                        <div class="card-leg legenda-grafico-disp-mot">
+                            <div class="leg leg-livre">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Livre</span>
+                            </div>
+                            <div class="leg leg-ocupado">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Ocupado</span>
+                            </div>
+                            <div class="leg leg-manutencao">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Em Manutenção</span>
+                            </div>
+                            <div class="leg leg-operacao">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Em Operação</span>
+                            </div>
+                            <div class="leg leg-outros">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Outros</span>
                             </div>
                         </div>
                     </div>
@@ -146,6 +178,77 @@
                 </div>
                 
             </div>
+            <div class="dashboard-man graf-escondido">
+                <div class="graficos-man">
+                    <div class="card">
+                        <h2>Manutenções por Tipo</h2>
+                        <div class="chart-container">
+                            <div class="chart-center">
+                                <span>Total</span>
+                                <span id="sum-value-man"></span>
+                            </div>
+                            <canvas id="grafico-freq"></canvas>
+                            
+                        </div>
+                        <div class="card-leg legenda-grafico-disp-mot">
+                            <div class="leg leg-carga">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Carga</span>
+                            </div>
+                            <div class="leg leg-visita">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Visita</span>
+                            </div>
+                            <div class="leg leg-vendas">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Vendas</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h2>Custo Médio de Manutenção</h2>
+                        <div class="chart-container">
+                            <canvas id="grafico-custo" height="300"></canvas>
+                        </div>
+                        <div class="card-leg legenda-grafico-disp-mot">
+                            <div class="leg leg-carga">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Carga</span>
+                            </div>
+                            <div class="leg leg-visita">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Visita</span>
+                            </div>
+                            <div class="leg leg-vendas">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Vendas</span>
+                            </div>
+                        </div>
+                    </div>
+                      <div class="card">
+                        <h2>Tempo Médio de Manutenção (dias)</h2>
+                        <div class="chart-container">
+                            <canvas id="tempo-medio-manutencao" height="300"></canvas>
+                        </div>
+                        <div class="card-leg legenda-grafico-disp-mot">
+                            <div class="leg leg-carga">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Carga</span>
+                            </div>
+                            <div class="leg leg-visita">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Visita</span>
+                            </div>
+                            <div class="leg leg-vendas">
+                                <div class="leg-square"></div>
+                                <span class="leg-span">Vendas</span>
+                            </div>
+                        </div>
+                      </div>
+                      
+                    </div>
+                </div>
+                
         </div>
         <div class="main-motoristas main" id="mainMot">
             <div class="page-top">
