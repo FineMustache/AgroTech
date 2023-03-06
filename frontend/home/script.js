@@ -787,6 +787,7 @@ function carregarManutencoes() {
         // ... código anterior
 
         const dadosPreparados = prepararDadosParaDashboard(response)
+        console.log(dadosPreparados)
 
         // Calcula o tempo médio de manutenção por tipo de veículo
         const tempoMedioManutencaoCarga = calcularTempoMedioManutencao(dadosPreparados.manutencoesCarga, "carga");
@@ -820,7 +821,29 @@ function carregarManutencoes() {
             }
         });
 
-        // ... código posterior
+        const mediaMesCarga = separarMediaManutencaoPorMes(response, 'carga')
+        let dataCPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        mediaMesCarga.forEach(m => {
+            dataCPMM[Number(m.mes.split('-')[1])] += m.media
+        })
+        const custoPorMesManutencaoCtx = document.getElementById('custo-mes-manutencao')
+        const custoPorMesManutencaoChart = new Chart(custoPorMesManutencaoCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: dataCPMM,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                  }]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 5 / 2
+            }
+        })
     })
     .catch(err => console.error(err));
 }
@@ -963,3 +986,20 @@ function agruparManutencoesPorTipoVeiculo(manutencoes) {
     };
   }
   
+  function separarMediaManutencaoPorMes(manutencoes, tipoVeiculo) {
+    const manutencoesFiltradas = manutencoes.filter(m => m.veiculo.tipo === tipoVeiculo);
+    const mediaPorMes = {};
+    manutencoesFiltradas.forEach(m => {
+      const dataInicio = new Date(m.data_inicio);
+      const dataFim = new Date(m.data_fim);
+      const meses = (dataFim.getFullYear() - dataInicio.getFullYear()) * 12 + (dataFim.getMonth() - dataInicio.getMonth()) + 1;
+      const valorPorMes = m.valor / meses;
+      for (let i = 0; i < meses; i++) {
+        const mes = (dataInicio.getMonth() + i) % 12;
+        const ano = dataInicio.getFullYear() + Math.floor((dataInicio.getMonth() + i) / 12);
+        const chave = `${ano}-${mes + 1 < 10 ? '0' + (mes + 1) : mes + 1}`;
+        mediaPorMes[chave] = (mediaPorMes[chave] || 0) + valorPorMes;
+      }
+    });
+    return Object.keys(mediaPorMes).map(k => ({ mes: k, media: mediaPorMes[k] }));
+  }

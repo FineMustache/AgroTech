@@ -982,3 +982,14 @@ canvas{
 .leg-visita > .leg-square{
   background-color: rgba(54, 162, 235);
 }
+
+.main-veiculos{
+  display: flex;
+  flex-direction: column;
+}
+
+.page-veiculos{
+  display: flex;
+  flex: 1;
+  overflow-y: hidden;
+}
