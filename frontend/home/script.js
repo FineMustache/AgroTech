@@ -82,7 +82,8 @@ function carregarMotoristas() {
 							var percentage = ((value * 100) / sum).toFixed(2) + "%";
 							return percentage;
 						}
-					}
+					},
+                    spacing: 1
 				}
 			}
 		});
@@ -433,7 +434,8 @@ function carregarVeiculos() {
 							var percentage = ((value * 100) / sum).toFixed(2) + "%";
 							return percentage;
 						}
-					}
+					},
+                    spacing: 1
 				},
                 onClick: (e, a) => {
                     console.log(a)
@@ -733,7 +735,8 @@ function carregarManutencoes() {
                 legend: {
                     display: false
                 }
-            }
+            },
+            spacing: 1
         }
         });
 
@@ -753,11 +756,13 @@ function carregarManutencoes() {
         }
         });
 
-        const labelsCusto = Object.keys(custoManutencoes);
+        const labelsCusto = ['carga', 'visita', 'vendas'];
         const dataCusto = [];
         labelsCusto.forEach(label => {
         dataCusto.push(custoManutencoes[label].total / custoManutencoes[label].qtd);
         });
+
+        
 
         const graficoCusto = new Chart(document.getElementById('grafico-custo'), {
         type: 'bar',
@@ -799,14 +804,14 @@ function carregarManutencoes() {
         const tempoMedioManutencaoChart = new Chart(tempoMedioManutencaoCtx, {
             type: 'bar',
             data: {
-                labels: ['Carga', 'Vendas', 'Visita'],
+                labels: ['Carga', 'Visita', 'Vendas'],
                 datasets: [{
                     label: 'Tempo Médio de Manutenção (dias)',
-                    data: [tempoMedioManutencaoCarga, tempoMedioManutencaoVendas, tempoMedioManutencaoVisita],
+                    data: [tempoMedioManutencaoCarga, tempoMedioManutencaoVisita, tempoMedioManutencaoVendas],
                     backgroundColor: [
                         'rgba(255, 99, 132)',
-                        'rgba(255, 206, 86)',
-                        'rgba(54, 162, 235)'
+                        'rgba(54, 162, 235)',
+                        'rgba(255, 206, 86)'
                     ],
                     borderColor: 'white',
                     borderWidth: 1
@@ -826,22 +831,120 @@ function carregarManutencoes() {
         mediaMesCarga.forEach(m => {
             dataCPMM[Number(m.mes.split('-')[1])] += m.media
         })
-        const custoPorMesManutencaoCtx = document.getElementById('custo-mes-manutencao')
+        const mediaMesVendas = separarMediaManutencaoPorMes(response, 'vendas')
+        let dataVsPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        mediaMesVendas.forEach(m => {
+            dataVsPMM[Number(m.mes.split('-')[1])] += m.media
+        })
+        const mediaMesVisita = separarMediaManutencaoPorMes(response, 'visita')
+        let dataVPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        mediaMesVisita.forEach(m => {
+            dataVPMM[Number(m.mes.split('-')[1])] += m.media
+        })
+
+        const custoPorMesManutencaoCtx = document.getElementById('custo-mes-manutencao').getContext('2d')
+
+        // const gradientCarga = custoPorMesManutencaoCtx.createLinearGradient(0, 0, 0, 450);
+
+        // gradientCarga.addColorStop(0, 'rgba(255, 99, 132, 1)');
+        // gradientCarga.addColorStop(0.5, 'rgba(255, 99, 132, 0.5)');
+        // gradientCarga.addColorStop(1, 'rgba(255, 99, 132, 0)');
+
+        // const gradientVendas = custoPorMesManutencaoCtx.createLinearGradient(0, 0, 0, 450);
+
+        // gradientVendas.addColorStop(0, 'rgba(255, 206, 86, 1)');
+        // gradientVendas.addColorStop(0.5, 'rgba(255, 206, 86, 0.5)');
+        // gradientVendas.addColorStop(1, 'rgba(255, 206, 86, 0)');
+
+        // const gradientVisita = custoPorMesManutencaoCtx.createLinearGradient(0, 0, 0, 450);
+
+        // gradientVisita.addColorStop(0, 'rgba(54, 162, 235, 1)');
+        // gradientVisita.addColorStop(0.5, 'rgba(54, 162, 235, 0.5)');
+        // gradientVisita.addColorStop(1, 'rgba(54, 162, 235, 0)');
+
         const custoPorMesManutencaoChart = new Chart(custoPorMesManutencaoCtx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: dataCPMM,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                  }]
+                datasets: [
+                    {
+                        label: 'Carga',
+                        data: dataCPMM,
+                        fill: false,
+                        backgroundColor: 'rgba(255, 99, 132)',
+                        borderColor: 'rgba(255, 99, 132)',
+                        tension: 0.1
+                      },
+                      {
+                        label: 'Vendas',
+                        data: dataVsPMM,
+                        fill: false,
+                        borderColor: 'rgba(255, 206, 86)',
+                        backgroundColor: 'rgba(255, 206, 86)',
+                        tension: 0.1
+                      },
+                      {
+                        label: 'Visita',
+                        data: dataVPMM,
+                        fill: false,
+                        borderColor: 'rgba(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235)',
+                        tension: 0.1
+                      }
+                ]
             },
             options: {
                 responsive: true,
                 aspectRatio: 5 / 2
+            }
+        })
+
+
+        const freqManMesCarga = contarManutencoesPorMes(response, 'carga')
+        const freqManMesVendas = contarManutencoesPorMes(response, 'vendas')
+        const freqManMesVisita = contarManutencoesPorMes(response, 'visita')
+        const freqPorMesManutencaoCtx = document.getElementById('freq-mes-manutencao').getContext('2d')
+        const freqPorMesManutencaoChart = new Chart(freqPorMesManutencaoCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [
+                    {
+                        label: 'Carga',
+                        data: freqManMesCarga,
+                        fill: false,
+                        backgroundColor: 'rgba(255, 99, 132)',
+                        borderColor: 'rgba(255, 99, 132)',
+                        tension: 0.1
+                      },
+                      {
+                        label: 'Vendas',
+                        data: freqManMesVendas,
+                        fill: false,
+                        borderColor: 'rgba(255, 206, 86)',
+                        backgroundColor: 'rgba(255, 206, 86)',
+                        tension: 0.1
+                      },
+                      {
+                        label: 'Visita',
+                        data: freqManMesVisita,
+                        fill: false,
+                        borderColor: 'rgba(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235)',
+                        tension: 0.1
+                      }
+                ]
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 5 / 2,
+                scales: {
+                    y: {
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
             }
         })
     })
@@ -1003,3 +1106,18 @@ function agruparManutencoesPorTipoVeiculo(manutencoes) {
     });
     return Object.keys(mediaPorMes).map(k => ({ mes: k, media: mediaPorMes[k] }));
   }
+
+  function contarManutencoesPorMes(listaDeManutencoes, tipoDeVeiculo) {
+    const manutencoesPorMes = [0,0,0,0,0,0,0,0,0,0,0,0];
+  
+    for (let manutencao of listaDeManutencoes) {
+      if (manutencao.veiculo.tipo === tipoDeVeiculo) {
+        const dataDaManutencao = new Date(manutencao.data_inicio);
+        const mesDaManutencao = dataDaManutencao.getMonth();
+        manutencoesPorMes[mesDaManutencao]++;
+      }
+    }
+  
+    return manutencoesPorMes;
+  }
+  

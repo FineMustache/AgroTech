@@ -250,40 +250,12 @@
                         <div class="chart-container">
                             <canvas id="custo-mes-manutencao" width="550"></canvas>
                         </div>
-                        <!-- <div class="card-leg legenda-grafico-disp-mot">
-                            <div class="leg leg-carga">
-                                <div class="leg-square"></div>
-                                <span class="leg-span">Carga</span>
-                            </div>
-                            <div class="leg leg-visita">
-                                <div class="leg-square"></div>
-                                <span class="leg-span">Visita</span>
-                            </div>
-                            <div class="leg leg-vendas">
-                                <div class="leg-square"></div>
-                                <span class="leg-span">Vendas</span>
-                            </div>
-                        </div> -->
                       </div>
                       <div class="card" style="width: 612.5px">
-                        <h2>Custo ao Longo do Ano</h2>
+                        <h2>Frequência ao Longo do Ano</h2>
                         <div class="chart-container">
-                            <canvas id="custo-mes-manutencao"></canvas>
+                            <canvas id="freq-mes-manutencao" width="550"></canvas>
                         </div>
-                        <!-- <div class="card-leg legenda-grafico-disp-mot">
-                            <div class="leg leg-carga">
-                                <div class="leg-square"></div>
-                                <span class="leg-span">Carga</span>
-                            </div>
-                            <div class="leg leg-visita">
-                                <div class="leg-square"></div>
-                                <span class="leg-span">Visita</span>
-                            </div>
-                            <div class="leg leg-vendas">
-                                <div class="leg-square"></div>
-                                <span class="leg-span">Vendas</span>
-                            </div>
-                        </div> -->
                       </div>
                     </div>
                 </div>
@@ -338,6 +310,74 @@
             </div>
         </div>
         <div class="main-veiculos main" id="mainVeic">
+            <div class="page-top">
+                <button class="btnCadastrar" onclick="toggleModalCreateVeic()">Cadastrar</button>
+                <div class="right">
+                    <div class="showVeic">
+                        
+                        <div class="wrap-radio">
+                            <div onclick="toggleShowVeic(1, 2)" class="radio-opt-1 radio-opt-active">
+                                <span>Geral</span>
+                            </div>
+                            <div onclick="toggleShowVeic(2, 1)" class="radio-opt-2">
+                                <span>Segmentado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter">
+                        <span onclick="toggleFilterVeic()"><i class="fa-solid fa-filter"></i> Filtro</span>
+                        <div class="filter-db escondido">
+                            <label class="container-db">Disponível
+                                <input onclick="filterVeicChange()" type="checkbox" id="cbVeicDisp" checked>
+                                <span class="checkmark"></span>
+                            </label>
+    
+                            <label class="container-db">Indisponível
+                                <input onclick="filterVeicChange()" type="checkbox" id="cbVeicInd" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+            <div class="page-veiculos">
+                <div class="veiculos-geral">
+                    <div class="vg-table-container">
+                        <div id="veicGeral">
+                            <img src="https://cdn3.iconfinder.com/data/icons/car-icons-front-views/451/Compact_Car_Front_View-512.png" class="vgBg" alt="">
+                            <div class="table-head">
+                                <span>Placa</span>
+                                <span>Modelo</span>
+                                <span>Marca</span>
+                                <span>Tipo</span>
+                                <span>Disponibilidade</span>
+                                <span>Nº de Operações</span>
+                                <span>Nº de Manutenções</span>
+                            </div>
+                            <div class="table-body">
+                                <div class="modeloVeicGeral escondido">
+                                    <div class="veic-info">
+                                        <span id="vgPlaca">-</span>
+                                        <span id="vgModelo">-</span>
+                                        <span id="vgMarca">-</span>
+                                        <span id="vgTipo">-</span>
+                                        <span id="vgDisp">-</span>
+                                        <span id="vgNop">-</span>
+                                        <span id="vgNman">-</span>
+                                    </div>
+                                    <!-- <div class="row-options">
+                                        <button class="btnEditarVeicGeral">Editar</button>
+                                        <button class="btnExcluirVeicGeral">Excluir</button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-manutencoes main" id="mainMan">
             <div class="page-top">
                 <button class="btnCadastrar" onclick="toggleModalCreateVeic()">Cadastrar</button>
                 <div class="right">
