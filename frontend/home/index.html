@@ -381,17 +381,7 @@
             <div class="page-top">
                 <button class="btnCadastrar" onclick="toggleModalCreateVeic()">Cadastrar</button>
                 <div class="right">
-                    <div class="showVeic">
-                        
-                        <div class="wrap-radio">
-                            <div onclick="toggleShowVeic(1, 2)" class="radio-opt-1 radio-opt-active">
-                                <span>Geral</span>
-                            </div>
-                            <div onclick="toggleShowVeic(2, 1)" class="radio-opt-2">
-                                <span>Segmentado</span>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="filter">
                         <span onclick="toggleFilterVeic()"><i class="fa-solid fa-filter"></i> Filtro</span>
                         <div class="filter-db escondido">
@@ -412,32 +402,27 @@
             <div class="page-veiculos">
                 <div class="veiculos-geral">
                     <div class="vg-table-container">
-                        <div id="veicGeral">
-                            <img src="https://cdn3.iconfinder.com/data/icons/car-icons-front-views/451/Compact_Car_Front_View-512.png" class="vgBg" alt="">
+                        <div id="manGeral">
                             <div class="table-head">
                                 <span>Placa</span>
-                                <span>Modelo</span>
-                                <span>Marca</span>
-                                <span>Tipo</span>
-                                <span>Disponibilidade</span>
-                                <span>Nº de Operações</span>
-                                <span>Nº de Manutenções</span>
+                                <span>Descrição</span>
+                                <span>Data Início</span>
+                                <span>Data Fim</span>
+                                <span>Valor</span>
                             </div>
                             <div class="table-body">
-                                <div class="modeloVeicGeral escondido">
-                                    <div class="veic-info">
-                                        <span id="vgPlaca">-</span>
-                                        <span id="vgModelo">-</span>
-                                        <span id="vgMarca">-</span>
-                                        <span id="vgTipo">-</span>
-                                        <span id="vgDisp">-</span>
-                                        <span id="vgNop">-</span>
-                                        <span id="vgNman">-</span>
+                                <div class="modeloGeraMan escondido" onclick="flip(this, event)">
+                                    <div class="man-info">
+                                        <span id="gmPlaca">-</span>
+                                        <span id="gmDesc">-</span>
+                                        <span id="gmDataIni">-</span>
+                                        <span id="gmDataFim">-</span>
+                                        <span id="gmValor">-</span>
                                     </div>
-                                    <!-- <div class="row-options">
-                                        <button class="btnEditarVeicGeral">Editar</button>
-                                        <button class="btnExcluirVeicGeral">Excluir</button>
-                                    </div> -->
+                                    <div class="row-options">
+                                        <button onclick="toggleModalEditMan(this.parentNode.parentNode)" class="btnEditarManGeral">Editar</button>
+                                        <button onclick="finishMan(this.parentNode.parentNode.id)" class="btnFinalizarManGeral">Finalizar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -589,6 +574,31 @@
                 <div class="card-motorista-bottom">
                     <button class="btnCancelar" onclick="toggleModalCreateVeic({})">Cancelar</button>
                     <button class="btnConfirmar" onclick="cadastrarVeiculo()">Confirmar</button>
+                    <button class="btnExcluir" onclick="excluirVeic()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='modal modal-edit-man escondido' onclick="wiggle(event)">
+        <div class='modal-container card-motorista'>
+            <div class="card-motorista-top"><i onclick="toggleModalEditMan({})"
+                    class="fa-sharp fa-solid fa-xmark"></i></div>
+            <div class="motorista-info">
+                <span>
+                    VEÍCULO: <select class="allVeic" name="veic" id="inpVeic"></select></span>
+                </span>
+                <span>
+                    DESCRIÇÃO: <input type="text" name="desc" id="inpDesc"></span>
+                </span>
+                <span>
+                    VALOR: <input type="number" min="0" name="valor" id="inpValor"></span>
+                </span>
+                <input type="text" id="inpId" hidden>
+
+                <div class="card-motorista-bottom">
+                    <button class="btnCancelar" onclick="toggleModalEditMan({})">Cancelar</button>
+                    <button class="btnConfirmar" onclick="editVeic()">Confirmar</button>
                     <button class="btnExcluir" onclick="excluirVeic()">Excluir</button>
                 </div>
             </div>

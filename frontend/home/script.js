@@ -1,4 +1,9 @@
 var motoristas = []
+var graficoFreq = {"limpo": true}
+var graficoCusto = {"limpo": true}
+var tempoMedioManutencaoChart = {"limpo": true}
+var custoPorMesManutencaoChart = {"limpo": true}
+var freqPorMesManutencaoChart = {"limpo": true}
 
 function togglesbi(ev, mainId) {
     document.querySelectorAll('.sb-i').forEach(i => {
@@ -348,6 +353,11 @@ function carregarVeiculos() {
                 modelo.classList.remove('escondido')
 
                 document.querySelector('#veicGeral').querySelector('.table-body').appendChild(modelo)
+
+                let op = document.createElement('option')
+                op.value = v.id
+                op.innerHTML = `${v.placa} - ${v.marca} - ${v.modelo}`
+                document.querySelector('.allVeic').appendChild(op)
             })
         }
 
@@ -694,6 +704,18 @@ function carregarManutencoes() {
     
                 document.getElementById('veicManTableBody').appendChild(tr)   
             }
+
+            let model = document.querySelector('.modeloGeraMan').cloneNode(true)
+
+            model.querySelector('#gmPlaca').innerHTML = m.veiculo.placa
+            model.querySelector('#gmDesc').innerHTML = m.descricao
+            model.querySelector('#gmDataIni').innerHTML = new Date(m.data_inicio).toLocaleString('pt-br')
+            model.querySelector('#gmDataFim').innerHTML = m.data_fim == undefined ? '-' : new Date(m.data_fim).toLocaleString('pt-br')
+            model.querySelector('#gmValor').innerHTML = "R$ " + m.valor.toString().replace('.', ',')
+            model.classList.remove('escondido')
+            model.setAttribute('vid', m.veiculo.id)
+            model.id = "m" + m.id
+            document.querySelector('#manGeral').querySelector('.table-body').appendChild(model)
         })
 
         // gerar gráfico de frequência de manutenções por tipo de veículo
@@ -712,8 +734,12 @@ function carregarManutencoes() {
         document.querySelector('#sum-value-man').innerHTML = response.length
 
         console.log(labelsFreq, dataFreq)
+        
+        if (!graficoFreq.limpo) {
+            graficoFreq.destroy()
+        }
 
-        const graficoFreq = new Chart(document.getElementById('grafico-freq'), {
+        graficoFreq = new Chart(document.getElementById('grafico-freq'), {
         type: 'doughnut',
         data: {
             labels: labelsFreq,
@@ -758,13 +784,16 @@ function carregarManutencoes() {
 
         const labelsCusto = ['carga', 'visita', 'vendas'];
         const dataCusto = [];
+        console.log(custoManutencoes)
         labelsCusto.forEach(label => {
-        dataCusto.push(custoManutencoes[label].total / custoManutencoes[label].qtd);
+        custoManutencoes[label] !== undefined ? dataCusto.push(custoManutencoes[label].total / custoManutencoes[label].qtd) : dataCusto.push(0);
         });
 
-        
+        if (!graficoCusto.limpo) {
+            graficoCusto.destroy()
+        }
 
-        const graficoCusto = new Chart(document.getElementById('grafico-custo'), {
+        graficoCusto = new Chart(document.getElementById('grafico-custo'), {
         type: 'bar',
         data: {
             labels: labelsCusto.map(k => k = k.slice(0,1).toUpperCase() + k.slice(1)),
@@ -801,7 +830,12 @@ function carregarManutencoes() {
 
         // Cria o gráfico de tempo médio de manutenções por tipo de veículo
         const tempoMedioManutencaoCtx = document.getElementById('tempo-medio-manutencao').getContext('2d');
-        const tempoMedioManutencaoChart = new Chart(tempoMedioManutencaoCtx, {
+        
+        if (!tempoMedioManutencaoChart.limpo) {
+            tempoMedioManutencaoChart.destroy()
+        }
+
+        tempoMedioManutencaoChart = new Chart(tempoMedioManutencaoCtx, {
             type: 'bar',
             data: {
                 labels: ['Carga', 'Visita', 'Vendas'],
@@ -862,7 +896,11 @@ function carregarManutencoes() {
         // gradientVisita.addColorStop(0.5, 'rgba(54, 162, 235, 0.5)');
         // gradientVisita.addColorStop(1, 'rgba(54, 162, 235, 0)');
 
-        const custoPorMesManutencaoChart = new Chart(custoPorMesManutencaoCtx, {
+        if (!custoPorMesManutencaoChart.limpo) {
+            custoPorMesManutencaoChart.destroy()
+        }
+
+        custoPorMesManutencaoChart = new Chart(custoPorMesManutencaoCtx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
@@ -904,7 +942,12 @@ function carregarManutencoes() {
         const freqManMesVendas = contarManutencoesPorMes(response, 'vendas')
         const freqManMesVisita = contarManutencoesPorMes(response, 'visita')
         const freqPorMesManutencaoCtx = document.getElementById('freq-mes-manutencao').getContext('2d')
-        const freqPorMesManutencaoChart = new Chart(freqPorMesManutencaoCtx, {
+
+        if (!freqPorMesManutencaoChart.limpo) {
+            freqPorMesManutencaoChart.destroy()
+        }
+
+        freqPorMesManutencaoChart = new Chart(freqPorMesManutencaoCtx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
@@ -1121,3 +1164,43 @@ function agruparManutencoesPorTipoVeiculo(manutencoes) {
     return manutencoesPorMes;
   }
   
+
+function toggleModalEditMan(card) {
+    if (card.id !== undefined) {
+        document.querySelector('.modal-edit-man').querySelector('#inpVeic').value = card.getAttribute('vid')
+        document.querySelector('.modal-edit-man').querySelector('#inpDesc').value = card.querySelector('#gmDesc').innerHTML
+        document.querySelector('.modal-edit-man').querySelector('#inpValor').value = parseFloat(card.querySelector('#gmValor').innerHTML.slice(3).replace(',','.'))
+        document.querySelector('.modal-edit-man').querySelector('#inpId').value = card.id.slice(1)
+    } else {
+        document.querySelector('.modal-edit-man').querySelector('#inpDesc').value = ""
+        document.querySelector('.modal-edit-man').querySelector('#inpValor').value = ""
+    }
+    document.querySelector('.modal-edit-man').classList.toggle('escondido')
+    document.body.style.overflow = 'hidden'
+}
+
+function flip(el, ev) {
+    console.log(ev.target)
+    if (ev.target.parentNode.classList.contains('man-info') || ev.target.classList.contains('row-options')) {
+        const has = el.classList.contains('flip')
+        el.parentNode.querySelectorAll('.modeloGeraMan').forEach(m => m.classList.remove('flip'))
+        if (!has) {
+            el.classList.add('flip')
+        }
+    }
+    
+}
+
+function finishMan(id) {
+    const options = {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: `{"id":${id.slice(1)}}`};
+
+    fetch('http://localhost:3000/agrotech/manutencoes/finalizar', options)
+    .then(response => response.json())
+    .then(response => {
+        let modelo = document.querySelector('.main-manutencoes').querySelector('.table-body').querySelector('.modeloGeraMan').cloneNode(true)
+            document.querySelector('.main-manutencoes').querySelector('.table-body').innerHTML = ""
+            document.querySelector('.main-manutencoes').querySelector('.table-body').appendChild(modelo)
+            carregarManutencoes()
+    })
+    .catch(err => console.error(err));
+}

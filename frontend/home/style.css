@@ -549,10 +549,12 @@ input:focus {
   display: flex;
   overflow: auto;
   flex: 1;
+  height: min-content;
 }
 
 .vg-table-container{
   width: 100%;
+  height: min-content;
 }
 
 #veicGeral{
@@ -561,16 +563,16 @@ input:focus {
   position: relative;
 }
 
-#veicGeral .table-body div span{
+.table-body div span{
   border-right: 2px solid #002647;
   padding: 15px;
 }
 
-#veicGeral .table-body div span:last-child{
+.table-body div span:last-child{
   border-right: none;
 }
 
-#veicGeral .table-body div{
+.table-body div{
   border-top: 2px solid #002647;
   cursor: pointer;
 }
@@ -691,24 +693,12 @@ input:focus {
   border: none!important;
 }
 
-.row-options{
-  display: flex;
-  background-color: #002647;
-  gap: 10px;
-  height: 0;
-  align-items: center;
-  cursor: default!important;
-  transition: .5s;
-  overflow: hidden;
-  border: none!important;
-}
-
 .row-options-expand{
   height: 50px!important;
 }
 
-.btnEditarVeicGeral{
-  background-color: #0062a6;
+.btnEditarManGeral{
+  background-color: #002647;
   border: 2px solid #fff;
   color: white;
   padding: 10px 20px;
@@ -716,8 +706,8 @@ input:focus {
   margin-left: 10px;
 }
 
-.btnExcluirVeicGeral{
-  background-color: #b40000;
+.btnFinalizarManGeral{
+  background-color: #0062a6;
   border: 2px solid #fff;
   color: white;
   padding: 10px 20px;
@@ -730,9 +720,9 @@ input:focus {
   flex-direction: column;
 }
 
-.table-body{
+/* .table-body{
   overflow-y: auto;
-}
+} */
 
 #inpTipo{
   flex: 1;
@@ -992,4 +982,163 @@ canvas{
   display: flex;
   flex: 1;
   overflow-y: hidden;
+}
+
+.man-info {
+  position: relative;
+  display: flex;
+  width: 100%;
+  border: none!important;
+}
+
+.main-manutencoes .table-head > span:nth-child(1){
+  width: 10%!important;
+}
+
+.main-manutencoes .table-head > span:nth-child(2){
+  width: 35%!important;
+}
+
+.main-manutencoes .table-head > span:nth-child(3){
+  width: 20%!important;
+}
+
+.main-manutencoes .table-head > span:nth-child(4){
+  width: 20%!important;
+}
+
+.main-manutencoes .table-head > span:nth-child(5){
+  width: 15%!important;
+}
+/**/
+.main-manutencoes .table-body div > span:nth-child(1){
+  width: 10%!important;
+}
+
+.main-manutencoes .table-body div > span:nth-child(2){
+  width: 35%!important;
+}
+
+.main-manutencoes .table-body div > span:nth-child(3){
+  width: 20%!important;
+}
+
+.main-manutencoes .table-body div > span:nth-child(4){
+  width: 20%!important;
+}
+
+.main-manutencoes .table-body div > span:nth-child(5){
+  width: 15%!important;
+}
+
+.main-manutencoes #vgDesc{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.main-manutencoes .table-body span {
+  padding: 15px;
+}
+
+.main-manutencoes .table-head span{
+  border-right: 2px solid #fff;
+  padding: 15px;
+}
+
+.main-manutencoes .table-head span:last-child{
+  border-right: none;
+}
+
+.man-info:hover{
+  background-color: #c1cddd;
+}
+
+.table-body{
+  width: 100%;
+}
+
+.modeloGeraMan{
+  height: 54px;
+  position: relative;
+  perspective: 3000px;
+  -webkit-perspective: 3000px;
+	-moz-perspective: 3000px;
+  
+  -webkit-transform-origin: 100% center;
+  -moz-transform-origin: 100% center;
+  -ms-transform-origin: 100% center;
+  transform-origin: 100% center;
+}
+
+.row-options{
+  width: 100%;
+  display: flex;
+  background-color: #002647;
+  gap: 10px;
+  height: 100%;
+  align-items: center;
+  cursor: default!important;
+  overflow: hidden;
+  border: none!important;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+  
+	-webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+  -o-transition: transform .6s ease-in-out;
+  -moz-transition: transform .6s ease-in-out;
+  -webkit-transition: transform .6s ease-in-out;
+  transition: transform .6s ease-in-out;
+  
+	position: absolute;
+	top: 0;
+	left: 0;
+
+  -webkit-transform: rotateX(-180deg);
+	-moz-transform: rotateX(-180deg);
+	transform: rotateX(-180deg);
+}
+
+.man-info{
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+  
+	-webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+
+  -o-transition: transform .6s ease-in-out;
+  -moz-transition: transform .6s ease-in-out;
+  -webkit-transition: transform .6s ease-in-out;
+  transition: transform .6s ease-in-out;
+  
+	position: absolute;
+	top: 0;
+	left: 0;
+
+  z-index: 2;
+	-webkit-transform: rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+}
+
+.modeloGeraMan.flip .man-info{
+  -webkit-transform: rotateX(180deg);
+	-moz-transform: rotateX(180deg);
+	transform: rotateX(180deg);
+}
+
+.modeloGeraMan.flip .row-options{
+  -webkit-transform: rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+}
+
+.allVeic{
+  flex: 1;
 }
