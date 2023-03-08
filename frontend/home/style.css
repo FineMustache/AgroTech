@@ -981,7 +981,7 @@ canvas{
 .page-veiculos{
   display: flex;
   flex: 1;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 .man-info {
@@ -1141,4 +1141,9 @@ canvas{
 
 .allVeic{
   flex: 1;
+}
+
+.main-manutencoes{
+  display: flex;
+  flex-direction: column;
 }

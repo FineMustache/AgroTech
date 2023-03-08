@@ -4,6 +4,7 @@ var graficoCusto = {"limpo": true}
 var tempoMedioManutencaoChart = {"limpo": true}
 var custoPorMesManutencaoChart = {"limpo": true}
 var freqPorMesManutencaoChart = {"limpo": true}
+var myChart = {"limpo": true}
 
 function togglesbi(ev, mainId) {
     document.querySelectorAll('.sb-i').forEach(i => {
@@ -48,6 +49,7 @@ function carregarMotoristas() {
         let nLivre = response.reduce((count, obj) => obj.disponivel ? count + 1 : count, 0)
         let nOcupado = response.reduce((count, obj) => !obj.disponivel ? count + 1 : count, 0)
         var ctx = document.getElementById('doughnut-chart-disp-mot').getContext('2d');
+
 		var myChart = new Chart(ctx, {
 			type: 'doughnut',
 			data: {
@@ -384,7 +386,12 @@ function carregarVeiculos() {
         let nOutros = nOcupado - nManutencao - nOp
 
         var ctx = document.getElementById('doughnut-chart-disp-veic').getContext('2d');
-		var myChart = new Chart(ctx, {
+
+        if (!myChart.limpo) {
+            myChart.destroy()
+        }
+
+		myChart = new Chart(ctx, {
 			type: 'doughnut',
 			data: {
 				datasets: [{
@@ -715,6 +722,8 @@ function carregarManutencoes() {
             model.classList.remove('escondido')
             model.setAttribute('vid', m.veiculo.id)
             model.id = "m" + m.id
+            model.setAttribute('aberto', m.data_fim 
+            )
             document.querySelector('#manGeral').querySelector('.table-body').appendChild(model)
         })
 
@@ -861,20 +870,20 @@ function carregarManutencoes() {
         });
 
         const mediaMesCarga = separarMediaManutencaoPorMes(response, 'carga')
-        let dataCPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        mediaMesCarga.forEach(m => {
-            dataCPMM[Number(m.mes.split('-')[1])] += m.media
-        })
+        // let dataCPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        // mediaMesCarga.forEach(m => {
+        //     dataCPMM[Number(m.mes.split('-')[1])] += m.media
+        // })
         const mediaMesVendas = separarMediaManutencaoPorMes(response, 'vendas')
-        let dataVsPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        mediaMesVendas.forEach(m => {
-            dataVsPMM[Number(m.mes.split('-')[1])] += m.media
-        })
+        // let dataVsPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        // mediaMesVendas.forEach(m => {
+        //     dataVsPMM[Number(m.mes.split('-')[1])] += m.media
+        // })
         const mediaMesVisita = separarMediaManutencaoPorMes(response, 'visita')
-        let dataVPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        mediaMesVisita.forEach(m => {
-            dataVPMM[Number(m.mes.split('-')[1])] += m.media
-        })
+        // let dataVPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        // mediaMesVisita.forEach(m => {
+        //     dataVPMM[Number(m.mes.split('-')[1])] += m.media
+        // })
 
         const custoPorMesManutencaoCtx = document.getElementById('custo-mes-manutencao').getContext('2d')
 
@@ -900,6 +909,8 @@ function carregarManutencoes() {
             custoPorMesManutencaoChart.destroy()
         }
 
+        console.log(mediaMesCarga)
+
         custoPorMesManutencaoChart = new Chart(custoPorMesManutencaoCtx, {
             type: 'line',
             data: {
@@ -907,7 +918,7 @@ function carregarManutencoes() {
                 datasets: [
                     {
                         label: 'Carga',
-                        data: dataCPMM,
+                        data: mediaMesCarga,
                         fill: false,
                         backgroundColor: 'rgba(255, 99, 132)',
                         borderColor: 'rgba(255, 99, 132)',
@@ -915,7 +926,7 @@ function carregarManutencoes() {
                       },
                       {
                         label: 'Vendas',
-                        data: dataVsPMM,
+                        data: mediaMesVendas,
                         fill: false,
                         borderColor: 'rgba(255, 206, 86)',
                         backgroundColor: 'rgba(255, 206, 86)',
@@ -923,7 +934,7 @@ function carregarManutencoes() {
                       },
                       {
                         label: 'Visita',
-                        data: dataVPMM,
+                        data: mediaMesVisita,
                         fill: false,
                         borderColor: 'rgba(54, 162, 235)',
                         backgroundColor: 'rgba(54, 162, 235)',
@@ -942,6 +953,8 @@ function carregarManutencoes() {
         const freqManMesVendas = contarManutencoesPorMes(response, 'vendas')
         const freqManMesVisita = contarManutencoesPorMes(response, 'visita')
         const freqPorMesManutencaoCtx = document.getElementById('freq-mes-manutencao').getContext('2d')
+
+        console.log(freqManMesCarga)
 
         if (!freqPorMesManutencaoChart.limpo) {
             freqPorMesManutencaoChart.destroy()
@@ -1134,20 +1147,17 @@ function agruparManutencoesPorTipoVeiculo(manutencoes) {
   
   function separarMediaManutencaoPorMes(manutencoes, tipoVeiculo) {
     const manutencoesFiltradas = manutencoes.filter(m => m.veiculo.tipo === tipoVeiculo);
+    const manutencoesPorMes = [0,0,0,0,0,0,0,0,0,0,0,0];
     const mediaPorMes = {};
-    manutencoesFiltradas.forEach(m => {
-      const dataInicio = new Date(m.data_inicio);
-      const dataFim = new Date(m.data_fim);
-      const meses = (dataFim.getFullYear() - dataInicio.getFullYear()) * 12 + (dataFim.getMonth() - dataInicio.getMonth()) + 1;
-      const valorPorMes = m.valor / meses;
-      for (let i = 0; i < meses; i++) {
-        const mes = (dataInicio.getMonth() + i) % 12;
-        const ano = dataInicio.getFullYear() + Math.floor((dataInicio.getMonth() + i) / 12);
-        const chave = `${ano}-${mes + 1 < 10 ? '0' + (mes + 1) : mes + 1}`;
-        mediaPorMes[chave] = (mediaPorMes[chave] || 0) + valorPorMes;
-      }
-    });
-    return Object.keys(mediaPorMes).map(k => ({ mes: k, media: mediaPorMes[k] }));
+        
+  
+    for (let manutencao of manutencoesFiltradas) {
+        const dataDaManutencao = new Date(manutencao.data_inicio);
+        const mesDaManutencao = dataDaManutencao.getMonth();
+        manutencoesPorMes[mesDaManutencao] += manutencao.valor;
+    }
+    
+    return manutencoesPorMes;
   }
 
   function contarManutencoesPorMes(listaDeManutencoes, tipoDeVeiculo) {
@@ -1171,6 +1181,11 @@ function toggleModalEditMan(card) {
         document.querySelector('.modal-edit-man').querySelector('#inpDesc').value = card.querySelector('#gmDesc').innerHTML
         document.querySelector('.modal-edit-man').querySelector('#inpValor').value = parseFloat(card.querySelector('#gmValor').innerHTML.slice(3).replace(',','.'))
         document.querySelector('.modal-edit-man').querySelector('#inpId').value = card.id.slice(1)
+        if (card.querySelector('#gmDataFim').innerHTML == "-") {
+            document.querySelector('.modal-edit-man').querySelector('#inpVeic').setAttribute('disabled', true)
+        } else {
+            document.querySelector('.modal-edit-man').querySelector('#inpVeic').removeAttribute('disabled')
+        }
     } else {
         document.querySelector('.modal-edit-man').querySelector('#inpDesc').value = ""
         document.querySelector('.modal-edit-man').querySelector('#inpValor').value = ""
@@ -1201,6 +1216,43 @@ function finishMan(id) {
             document.querySelector('.main-manutencoes').querySelector('.table-body').innerHTML = ""
             document.querySelector('.main-manutencoes').querySelector('.table-body').appendChild(modelo)
             carregarManutencoes()
+
+            let modeloV = document.querySelector('.main-veiculos').querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+            document.querySelector('.main-veiculos').querySelector('.table-body').innerHTML = ""
+            document.querySelector('.main-veiculos').querySelector('.table-body').appendChild(modeloV)
+            carregarVeiculos()
     })
     .catch(err => console.error(err));
+}
+
+function editMan() {
+    let id_veiculo = document.querySelector('.modal-edit-man').querySelector('#inpVeic').value
+    let descricao = document.querySelector('.modal-edit-man').querySelector('#inpDesc').value
+    let valor = document.querySelector('.modal-edit-man').querySelector('#inpValor').value
+    let id = document.querySelector('.modal-edit-man').querySelector('#inpId').value
+
+    
+
+    const options = {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id, descricao, valor, id_veiculo})
+      };
+      
+      fetch('http://localhost:3000/agrotech/manutencoes', options)
+        .then(response => response.json())
+        .then(response => {
+            let modelo = document.querySelector('.main-manutencoes').querySelector('.table-body').querySelector('.modeloGeraMan').cloneNode(true)
+            document.querySelector('.main-manutencoes').querySelector('.table-body').innerHTML = ""
+            document.querySelector('.main-manutencoes').querySelector('.table-body').appendChild(modelo)
+            carregarManutencoes()
+
+            let modeloV = document.querySelector('.main-veiculos').querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+            document.querySelector('.main-veiculos').querySelector('.table-body').innerHTML = ""
+            document.querySelector('.main-veiculos').querySelector('.table-body').appendChild(modeloV)
+            carregarVeiculos()
+
+            toggleModalEditMan({})
+        })
+        .catch(err => console.error(err));
 }

@@ -60,6 +60,8 @@ const read = async (req, res) => {
 
 const update = async (req, res) => {
     req.body.id = Number(req.body.id)
+    req.body.valor = Number(req.body.valor)
+    req.body.id_veiculo = Number(req.body.id_veiculo)
     const manutencao = await prisma.manutencao.update({
         where: {
             id: req.body.id
