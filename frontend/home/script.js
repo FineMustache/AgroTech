@@ -1,10 +1,10 @@
-var motoristas = []
 var graficoFreq = {"limpo": true}
 var graficoCusto = {"limpo": true}
 var tempoMedioManutencaoChart = {"limpo": true}
 var custoPorMesManutencaoChart = {"limpo": true}
 var freqPorMesManutencaoChart = {"limpo": true}
 var myChart = {"limpo": true}
+var myChartMot = {"limpo": true}
 
 function togglesbi(ev, mainId) {
     document.querySelectorAll('.sb-i').forEach(i => {
@@ -30,7 +30,12 @@ function carregarMotoristas() {
     fetch('http://localhost:3000/agrotech/motoristas', options)
     .then(response => response.json())
     .then(response => {
-        motoristas = response
+        document.querySelectorAll('.allMot').forEach(s => {
+            s.innerHTML = ""
+        })
+        document.querySelectorAll('.freeMot').forEach(s => {
+            s.innerHTML = ""
+        })
         response.forEach(r => {
             let modelo = document.querySelector('.page-motoristas').querySelector('.modelo').cloneNode(true)
             modelo.querySelector('#nome').innerHTML = r.nome
@@ -45,12 +50,34 @@ function carregarMotoristas() {
             modelo.classList.remove('modelo')
 
             document.querySelector('.page-motoristas').appendChild(modelo)
+
+            document.querySelectorAll('.allMot').forEach(s => {
+                let op = document.createElement('option')
+                op.value = r.id
+                op.innerHTML = `${r.id} - ${r.nome}`
+                console.log(op)
+                s.appendChild(op)
+            })
+
+            if (r.disponivel) {
+                document.querySelectorAll('.freeMot').forEach(s => {
+                    let op = document.createElement('option')
+                    op.value = r.id
+                    op.innerHTML = `${r.id} - ${r.nome}`
+                    console.log(op)
+                    s.appendChild(op)
+                })
+            }
         })
         let nLivre = response.reduce((count, obj) => obj.disponivel ? count + 1 : count, 0)
         let nOcupado = response.reduce((count, obj) => !obj.disponivel ? count + 1 : count, 0)
         var ctx = document.getElementById('doughnut-chart-disp-mot').getContext('2d');
 
-		var myChart = new Chart(ctx, {
+        if(!myChartMot.limpo){
+            myChartMot.destroy()
+        }
+
+		myChartMot = new Chart(ctx, {
 			type: 'doughnut',
 			data: {
 				labels: ['Ocupado', 'Livre'],
@@ -96,7 +123,7 @@ function carregarMotoristas() {
 		});
 
 		var centerValue = document.querySelector('#sum-value-disp-mot');
-		centerValue.textContent = myChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+		centerValue.textContent = myChartMot.data.datasets[0].data.reduce((a, b) => a + b, 0);
     })
     .catch(err => console.error(err));
 }
@@ -222,6 +249,10 @@ function toggleFilterMotoristas() {
     document.querySelector('.main-motoristas').querySelector('.filter-db').classList.toggle('escondido')
 }
 
+function toggleFilterMan() {
+    document.querySelector('.main-manutencoes').querySelector('.filter-db').classList.toggle('escondido')
+}
+
 function filterMotoristasChange() {
     let cbDisp = document.querySelector("#cbMotDisp")
     let cbInd = document.querySelector("#cbMotInd")
@@ -261,6 +292,53 @@ function filterMotoristasChange() {
         cards.forEach((c, index) => {
             if(index !== 0){
                 if (c.getAttribute('disponibilidade') == "false") {
+                    c.classList.add('escondido')
+                }
+            }
+            
+        })
+    }
+}
+
+function filterManChange() {
+    let cbManAb = document.querySelector("#cbManAb")
+    let cbManFec = document.querySelector("#cbManFec")
+    let cards = document.querySelector('.main-manutencoes').querySelectorAll('.modeloGeraMan')
+
+    if (cbManAb.checked) {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('aberto') == "true") {
+                    c.classList.remove('escondido')
+                }
+            }
+            
+        })
+    } else {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('aberto') == "true") {
+                    c.classList.add('escondido')
+                }
+            }
+            
+        })
+    }
+
+    if (cbManFec.checked) {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('aberto') == "false") {
+                    c.classList.remove('escondido')
+                }
+            }
+            
+        })
+
+    } else {
+        cards.forEach((c, index) => {
+            if(index !== 0){
+                if (c.getAttribute('aberto') == "false") {
                     c.classList.add('escondido')
                 }
             }
@@ -328,6 +406,8 @@ function validarToken() {
     }
 }
 
+
+
 function toggleShowVeic(num, num2) {
     document.querySelector('.radio-opt-' + num).classList.add('radio-opt-active')
     document.querySelector('.radio-opt-' + num2).classList.remove('radio-opt-active')
@@ -339,7 +419,12 @@ function carregarVeiculos() {
     fetch('http://localhost:3000/agrotech/veiculos', options)
     .then(response => response.json())
     .then(response => {
-        if (document.querySelector('.radio-opt-1').classList.contains('radio-opt-active')) {
+            document.querySelectorAll('.allVeic').forEach(s => {
+                s.innerHTML = ""
+            })
+            document.querySelectorAll('.freeVeic').forEach(s => {
+                s.innerHTML = ""
+            })
             response.forEach(v => {
                 let modelo = document.querySelector('.modeloVeicGeral').cloneNode(true)
                 modelo.querySelector('#vgPlaca').innerHTML = v.placa
@@ -356,12 +441,24 @@ function carregarVeiculos() {
 
                 document.querySelector('#veicGeral').querySelector('.table-body').appendChild(modelo)
 
-                let op = document.createElement('option')
-                op.value = v.id
-                op.innerHTML = `${v.placa} - ${v.marca} - ${v.modelo}`
-                document.querySelector('.allVeic').appendChild(op)
+                document.querySelectorAll('.allVeic').forEach(s => {
+                    let op = document.createElement('option')
+                    op.value = v.id
+                    op.innerHTML = `${v.placa} - ${v.marca} - ${v.modelo} - ${v.tipo.slice(0,1).toUpperCase() + v.tipo.slice(1)}`
+                    console.log(op)
+                    s.appendChild(op)
+                })
+
+                if (v.disponivel) {
+                    document.querySelectorAll('.freeVeic').forEach(s => {
+                        let op = document.createElement('option')
+                        op.value = v.id
+                        op.innerHTML = `${v.placa} - ${v.marca} - ${v.modelo} - ${v.tipo.slice(0,1).toUpperCase() + v.tipo.slice(1)}`
+                        console.log(op)
+                        s.appendChild(op)
+                    })
+                }
             })
-        }
 
         let nLivre = response.reduce((count, obj) => obj.disponivel ? count + 1 : count, 0)
         let nOcupado = response.reduce((count, obj) => !obj.disponivel ? count + 1 : count, 0)
@@ -671,11 +768,11 @@ function toggleShowDash(num) {
     })
 
     switch (num) {
-        case 2:
+        case 1:
             document.querySelector('.dashboard-disp').classList.remove('graf-escondido')
             document.querySelector('.dashboard-man').classList.add('graf-escondido')
             break;
-        case 3:
+        case 2:
             document.querySelector('.dashboard-disp').classList.add('graf-escondido')
             document.querySelector('.dashboard-man').classList.remove('graf-escondido')
             break;
@@ -722,8 +819,7 @@ function carregarManutencoes() {
             model.classList.remove('escondido')
             model.setAttribute('vid', m.veiculo.id)
             model.id = "m" + m.id
-            model.setAttribute('aberto', m.data_fim 
-            )
+            model.setAttribute('aberto', m.data_fim == null)
             document.querySelector('#manGeral').querySelector('.table-body').appendChild(model)
         })
 
@@ -1034,6 +1130,22 @@ function carregarOperacoes() {
 
                 document.getElementById('veicOpTableBody').appendChild(tr)
             }
+
+            let model = document.querySelector('.modeloGeraOp').cloneNode(true)
+
+            model.querySelector('#goPlaca').innerHTML = o.veiculo.placa
+            model.querySelector('#goDesc').innerHTML = o.descricao
+            console.log(o.data_inicio)
+            model.querySelector('#goDataIni').innerHTML = new Date(o.data_saida).toLocaleString('pt-br')
+            model.querySelector('#goDataFim').innerHTML = o.data_retorno == undefined ? '-' : new Date(o.data_retorno).toLocaleString('pt-br')
+            model.querySelector('#goNome').innerHTML = o.motorista.nome
+            model.classList.remove('escondido')
+            model.setAttribute('vid', o.veiculo.id)
+            model.setAttribute('mid', o.motorista.id)
+            model.id = "o" + o.id
+            model.setAttribute('aberto', o.data_retorno == null)
+            document.querySelector('#opGeral').querySelector('.table-body').appendChild(model)
+
             
         })
     })
@@ -1181,6 +1293,7 @@ function toggleModalEditMan(card) {
         document.querySelector('.modal-edit-man').querySelector('#inpDesc').value = card.querySelector('#gmDesc').innerHTML
         document.querySelector('.modal-edit-man').querySelector('#inpValor').value = parseFloat(card.querySelector('#gmValor').innerHTML.slice(3).replace(',','.'))
         document.querySelector('.modal-edit-man').querySelector('#inpId').value = card.id.slice(1)
+        document.querySelector('.modal-edit-man').querySelector('#inpIdVeic').value = card.getAttribute('vid')
         if (card.querySelector('#gmDataFim').innerHTML == "-") {
             document.querySelector('.modal-edit-man').querySelector('#inpVeic').setAttribute('disabled', true)
         } else {
@@ -1195,10 +1308,10 @@ function toggleModalEditMan(card) {
 }
 
 function flip(el, ev) {
-    console.log(ev.target)
-    if (ev.target.parentNode.classList.contains('man-info') || ev.target.classList.contains('row-options')) {
+    
+    if (ev.target.parentNode.classList.contains('man-info') || ev.target.parentNode.classList.contains('op-info') || ev.target.classList.contains('row-options')) {
         const has = el.classList.contains('flip')
-        el.parentNode.querySelectorAll('.modeloGeraMan').forEach(m => m.classList.remove('flip'))
+        el.parentNode.querySelectorAll(".flip").forEach(m => m.classList.remove('flip'))
         if (!has) {
             el.classList.add('flip')
         }
@@ -1255,4 +1368,194 @@ function editMan() {
             toggleModalEditMan({})
         })
         .catch(err => console.error(err));
+}
+
+function toggleModalCreateMan() {
+    document.querySelector('.modal-create-man').querySelectorAll('input').forEach(i => i.value = i.type !== 'number' ? "" : 0)
+    document.querySelector('.modal-create-man').classList.toggle('escondido')
+}
+
+function cadastrarMan() {
+    let id_veiculo = Number(document.querySelector('.modal-create-man').querySelector('#inpVeic').value)
+    let descricao = document.querySelector('.modal-create-man').querySelector('#inpDesc').value
+    let valor = Number(document.querySelector('.modal-create-man').querySelector('#inpValor').value)    
+    let data_inicio = new Date().toISOString()
+
+    if (descricao.length > 0) {
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify([{id_veiculo, descricao, valor, data_inicio}])
+          };
+          
+          fetch('http://localhost:3000/agrotech/manutencoes', options)
+            .then(response => response.json())
+            .then(response => {
+                if (response.count !== null) {
+                    let modelo = document.querySelector('.main-manutencoes').querySelector('.table-body').querySelector('.modeloGeraMan').cloneNode(true)
+                    document.querySelector('.main-manutencoes').querySelector('.table-body').innerHTML = ""
+                    document.querySelector('.main-manutencoes').querySelector('.table-body').appendChild(modelo)
+                    carregarManutencoes()
+
+                    let modeloV = document.querySelector('.main-veiculos').querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+                    document.querySelector('.main-veiculos').querySelector('.table-body').innerHTML = ""
+                    document.querySelector('.main-veiculos').querySelector('.table-body').appendChild(modeloV)
+                    carregarVeiculos()
+
+                    toggleModalCreateMan()
+                }
+            })
+            .catch(err => console.error(err));
+    }
+}
+
+function excluirMan() {
+    const id = document.querySelector('.modal-edit-man').querySelector('#inpId').value
+    const id_veiculo = document.querySelector('.modal-edit-man').querySelector('#inpIdVeic').value
+    const options = {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: `{"id":${id}, "id_veiculo": ${id_veiculo}}`
+      };
+      
+      fetch('http://localhost:3000/agrotech/manutencoes', options)
+        .then(response => response.json())
+        .then(response => {
+            if (response.id !== null) {
+                let modelo = document.querySelector('.main-manutencoes').querySelector('.table-body').querySelector('.modeloGeraMan').cloneNode(true)
+                document.querySelector('.main-manutencoes').querySelector('.table-body').innerHTML = ""
+                document.querySelector('.main-manutencoes').querySelector('.table-body').appendChild(modelo)
+                carregarManutencoes()
+
+                let modeloV = document.querySelector('.main-veiculos').querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+                document.querySelector('.main-veiculos').querySelector('.table-body').innerHTML = ""
+                document.querySelector('.main-veiculos').querySelector('.table-body').appendChild(modeloV)
+                carregarVeiculos()
+
+                toggleModalEditMan({})
+            }
+        })
+        .catch(err => console.error(err));
+}
+
+function toggleModalEditOp(card) {
+    if (card.id !== undefined) {
+        document.querySelector('.modal-edit-op').querySelector('#inpIdVeic').value = card.getAttribute('vid')
+        document.querySelector('.modal-edit-op').querySelector('#inpIdMot').value = card.getAttribute('mid')
+        document.querySelector('.modal-edit-op').querySelector('#inpDesc').value = card.querySelector('#goDesc').innerHTML
+        document.querySelector('.modal-edit-op').querySelector('#inpId').value = card.id.slice(1)
+        if (card.querySelector('#goDataFim').innerHTML == "-") {
+            document.querySelector('.modal-edit-op').querySelector('#inpVeic').setAttribute('disabled', true)
+            document.querySelector('.modal-edit-op').querySelector('#inpMot').setAttribute('disabled', true)
+        } else {
+            document.querySelector('.modal-edit-op').querySelector('#inpVeic').removeAttribute('disabled')
+            document.querySelector('.modal-edit-op').querySelector('#inpMot').removeAttribute('disabled')
+        }
+    } else {
+        document.querySelector('.modal-edit-op').querySelector('#inpDesc').value = ""
+    }
+    document.querySelector('.modal-edit-op').classList.toggle('escondido')
+    document.body.style.overflow = 'hidden'
+}
+
+function editOp() {
+    let id_veiculo = document.querySelector('.modal-edit-op').querySelector('#inpVeic').value
+    let id_motorista = document.querySelector('.modal-edit-op').querySelector('#inpMot').value
+    let descricao = document.querySelector('.modal-edit-op').querySelector('#inpDesc').value
+    let id = document.querySelector('.modal-edit-op').querySelector('#inpId').value
+
+    const options = {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({id_veiculo, id_motorista, descricao, id})
+      };
+      
+      fetch('http://localhost:3000/agrotech/operacoes', options)
+        .then(response => response.json())
+        .then(response => {
+            let modelo = document.querySelector('.main-operacoes').querySelector('.table-body').querySelector('.modeloGeraOp').cloneNode(true)
+            document.querySelector('.main-operacoes').querySelector('.table-body').innerHTML = ""
+            document.querySelector('.main-operacoes').querySelector('.table-body').appendChild(modelo)
+            carregarOperacoes()
+
+            let modeloV = document.querySelector('.main-veiculos').querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+            document.querySelector('.main-veiculos').querySelector('.table-body').innerHTML = ""
+            document.querySelector('.main-veiculos').querySelector('.table-body').appendChild(modeloV)
+            carregarVeiculos()
+
+            let modeloM = document.querySelector('.main-motoristas').querySelector('.page-motoristas').querySelector('.card-motorista').cloneNode(true)
+            document.querySelector('.main-motoristas').querySelector('.page-motoristas').innerHTML = ""
+            document.querySelector('.main-motoristas').querySelector('.page-motoristas').appendChild(modeloM)
+            carregarMotoristas()
+
+            toggleModalEditOp({})
+        })
+        .catch(err => console.error(err));
+}
+
+function toggleModalCreateOp() {
+    document.querySelector('.modal-create-op').querySelectorAll('input').forEach(i => i.value = i.type !== 'number' ? "" : 0)
+    document.querySelector('.modal-create-op').classList.toggle('escondido')
+}
+
+function cadastrarOp() {
+    let id_veiculo = Number(document.querySelector('.modal-create-op').querySelector('#inpVeic').value)
+    let id_motorista = Number(document.querySelector('.modal-create-op').querySelector('#inpMot').value)
+    let descricao = document.querySelector('.modal-create-op').querySelector('#inpDesc').value
+
+    if (descricao.length > 0) {
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify([{id_veiculo, descricao, id_motorista}])
+          };
+          
+          fetch('http://localhost:3000/agrotech/operacoes', options)
+            .then(response => response.json())
+            .then(response => {
+                if (response.count !== null) {
+                    let modelo = document.querySelector('.main-operacoes').querySelector('.table-body').querySelector('.modeloGeraOp').cloneNode(true)
+                    document.querySelector('.main-operacoes').querySelector('.table-body').innerHTML = ""
+                    document.querySelector('.main-operacoes').querySelector('.table-body').appendChild(modelo)
+                    carregarOperacoes()
+
+                    let modeloV = document.querySelector('.main-veiculos').querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+                    document.querySelector('.main-veiculos').querySelector('.table-body').innerHTML = ""
+                    document.querySelector('.main-veiculos').querySelector('.table-body').appendChild(modeloV)
+                    carregarVeiculos()
+
+                    let modeloM = document.querySelector('.main-motoristas').querySelector('.page-motoristas').querySelector('.card-motorista').cloneNode(true)
+                    document.querySelector('.main-motoristas').querySelector('.page-motoristas').innerHTML = ""
+                    document.querySelector('.main-motoristas').querySelector('.page-motoristas').appendChild(modeloM)
+                    carregarMotoristas()
+
+                    toggleModalCreateOp()
+                }
+            })
+            .catch(err => console.error(err));
+    }
+}
+
+function finishOp(id) {
+    const options = {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: `{"id":${id.slice(1)}}`};
+
+    fetch('http://localhost:3000/agrotech/operacoes/finalizar', options)
+    .then(response => response.json())
+    .then(response => {
+        let modelo = document.querySelector('.main-operacoes').querySelector('.table-body').querySelector('.modeloGeraOp').cloneNode(true)
+        document.querySelector('.main-operacoes').querySelector('.table-body').innerHTML = ""
+        document.querySelector('.main-operacoes').querySelector('.table-body').appendChild(modelo)
+        carregarOperacoes()
+
+        let modeloV = document.querySelector('.main-veiculos').querySelector('.table-body').querySelector('.modeloVeicGeral').cloneNode(true)
+        document.querySelector('.main-veiculos').querySelector('.table-body').innerHTML = ""
+        document.querySelector('.main-veiculos').querySelector('.table-body').appendChild(modeloV)
+        carregarVeiculos()
+
+        let modeloM = document.querySelector('.main-motoristas').querySelector('.page-motoristas').querySelector('.card-motorista').cloneNode(true)
+        document.querySelector('.main-motoristas').querySelector('.page-motoristas').innerHTML = ""
+        document.querySelector('.main-motoristas').querySelector('.page-motoristas').appendChild(modeloM)
+        carregarMotoristas()
+    })
+    .catch(err => console.error(err));
 }

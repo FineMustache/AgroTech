@@ -73,6 +73,15 @@ const update = async (req, res) => {
 }
 
 const remove = async (req, res) => {
+    await prisma.veiculo.update({
+        where: {
+            id: Number(req.body.id_veiculo)
+        },
+        data: {
+            disponivel: true
+        }
+    })
+
     const manutencao = await prisma.manutencao.delete({
         where: {
             id: Number(req.body.id)

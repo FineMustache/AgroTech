@@ -66,15 +66,12 @@
                         
                     <div class="wrap-radio">
                         <div onclick="toggleShowDash(1)" class="radio-opt-dash radio-opt-dash-1 radio-opt-active">
-                            <span>Geral</span>
-                        </div>
-                        <div onclick="toggleShowDash(2)" class="radio-opt-dash radio-opt-dash-2">
                             <span>Disponibilidade</span>
                         </div>
-                        <div onclick="toggleShowDash(3)" class="radio-opt-dash radio-opt-dash-3">
+                        <div onclick="toggleShowDash(2)" class="radio-opt-dash radio-opt-dash-2">
                             <span>Manutenção</span>
                         </div>
-                        <div onclick="toggleShowDash(4)" class="radio-opt-dash radio-opt-dash-4">
+                        <div onclick="toggleShowDash(3)" class="radio-opt-dash radio-opt-dash-3">
                             <span>Alocação</span>
                         </div>
                     </div>
@@ -377,21 +374,74 @@
                 </div>
             </div>
         </div>
-        <div class="main-manutencoes main" id="mainMan">
+        <div class="main-operacoes main" id="mainOp">
             <div class="page-top">
-                <button class="btnCadastrar" onclick="toggleModalCreateVeic()">Cadastrar</button>
+                <button class="btnCadastrar" onclick="toggleModalCreateOp()">Cadastrar</button>
                 <div class="right">
 
                     <div class="filter">
-                        <span onclick="toggleFilterVeic()"><i class="fa-solid fa-filter"></i> Filtro</span>
+                        <span onclick="toggleFilterMan()"><i class="fa-solid fa-filter"></i> Filtro</span>
                         <div class="filter-db escondido">
-                            <label class="container-db">Disponível
-                                <input onclick="filterVeicChange()" type="checkbox" id="cbVeicDisp" checked>
+                            <label class="container-db">Aberto
+                                <input onclick="filterManChange()" type="checkbox" id="cbManAb" checked>
                                 <span class="checkmark"></span>
                             </label>
     
-                            <label class="container-db">Indisponível
-                                <input onclick="filterVeicChange()" type="checkbox" id="cbVeicInd" checked>
+                            <label class="container-db">Finalizado
+                                <input onclick="filterManChange()" type="checkbox" id="cbManFec" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+            <div class="page-veiculos">
+                <div class="veiculos-geral">
+                    <div class="vg-table-container">
+                        <div id="opGeral">
+                            <div class="table-head">
+                                <span>Placa</span>
+                                <span>Nome do Motorista</span>
+                                <span>Descrição</span>
+                                <span>Data Início</span>
+                                <span>Data Fim</span>
+                            </div>
+                            <div class="table-body">
+                                <div class="modeloGeraOp escondido" onclick="flip(this, event)">
+                                    <div class="op-info">
+                                        <span id="goPlaca">-</span>
+                                        <span id="goNome">-</span>
+                                        <span id="goDesc">-</span>
+                                        <span id="goDataIni">-</span>
+                                        <span id="goDataFim">-</span>
+                                    </div>
+                                    <div class="row-options">
+                                        <button onclick="toggleModalEditOp(this.parentNode.parentNode)" class="btnEditarGeral">Editar</button>
+                                        <button onclick="finishOp(this.parentNode.parentNode.id)" class="btnFinalizarGeral">Finalizar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-manutencoes main" id="mainMan">
+            <div class="page-top">
+                <button class="btnCadastrar" onclick="toggleModalCreateMan()">Cadastrar</button>
+                <div class="right">
+
+                    <div class="filter">
+                        <span onclick="toggleFilterMan()"><i class="fa-solid fa-filter"></i> Filtro</span>
+                        <div class="filter-db escondido">
+                            <label class="container-db">Aberto
+                                <input onclick="filterManChange()" type="checkbox" id="cbManAb" checked>
+                                <span class="checkmark"></span>
+                            </label>
+    
+                            <label class="container-db">Finalizado
+                                <input onclick="filterManChange()" type="checkbox" id="cbManFec" checked>
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -420,8 +470,8 @@
                                         <span id="gmValor">-</span>
                                     </div>
                                     <div class="row-options">
-                                        <button onclick="toggleModalEditMan(this.parentNode.parentNode)" class="btnEditarManGeral">Editar</button>
-                                        <button onclick="finishMan(this.parentNode.parentNode.id)" class="btnFinalizarManGeral">Finalizar</button>
+                                        <button onclick="toggleModalEditMan(this.parentNode.parentNode)" class="btnEditarGeral">Editar</button>
+                                        <button onclick="finishMan(this.parentNode.parentNode.id)" class="btnFinalizarGeral">Finalizar</button>
                                     </div>
                                 </div>
                             </div>
@@ -595,11 +645,85 @@
                     VALOR: <input type="number" min="0" name="valor" id="inpValor"></span>
                 </span>
                 <input type="text" id="inpId" hidden>
+                <input type="text" id="inpIdVeic" hidden>
 
                 <div class="card-motorista-bottom">
                     <button class="btnCancelar" onclick="toggleModalEditMan({})">Cancelar</button>
                     <button class="btnConfirmar" onclick="editMan()">Confirmar</button>
-                    <button class="btnExcluir" onclick="excluirVeic()">Excluir</button>
+                    <button class="btnExcluir" onclick="excluirMan()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='modal modal-create-man escondido' onclick="wiggle(event)">
+        <div class='modal-container card-motorista'>
+            <div class="card-motorista-top"><i onclick="toggleModalCreateMan()"
+                    class="fa-sharp fa-solid fa-xmark"></i></div>
+            <div class="motorista-info">
+                <span>
+                    VEÍCULO: <select class="freeVeic" name="veic" id="inpVeic"></select></span>
+                </span>
+                <span>
+                    DESCRIÇÃO: <input type="text" name="desc" id="inpDesc"></span>
+                </span>
+                <span>
+                    VALOR: <input type="number" min="0" name="valor" id="inpValor"></span>
+                </span>
+
+                <div class="card-motorista-bottom">
+                    <button class="btnCancelar" onclick="toggleModalCreateMan()">Cancelar</button>
+                    <button class="btnConfirmar" onclick="cadastrarMan()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='modal modal-edit-op escondido' onclick="wiggle(event)">
+        <div class='modal-container card-motorista'>
+            <div class="card-motorista-top"><i onclick="toggleModalEditOp({})"
+                    class="fa-sharp fa-solid fa-xmark"></i></div>
+            <div class="motorista-info">
+                <span>
+                    VEÍCULO: <select disabled class="allVeic" name="veic" id="inpVeic"></select></span>
+                </span>
+                <span>
+                    MOTORISTA: <select disabled class="allMot" name="mot" id="inpMot"></select></span>
+                </span>
+                <span>
+                    DESCRIÇÃO: <input type="text" name="desc" id="inpDesc"></span>
+                </span>
+                <input type="text" id="inpId" hidden>
+                <input type="text" id="inpIdMot" hidden>
+                <input type="text" id="inpIdVeic" hidden>
+
+                <div class="card-motorista-bottom">
+                    <button class="btnCancelar" onclick="toggleModalEditOp({})">Cancelar</button>
+                    <button class="btnConfirmar" onclick="editOp()">Confirmar</button>
+                    <button class="btnExcluir" onclick="excluirOp()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='modal modal-create-op escondido' onclick="wiggle(event)">
+        <div class='modal-container card-motorista'>
+            <div class="card-motorista-top"><i onclick="toggleModalCreateOp()"
+                    class="fa-sharp fa-solid fa-xmark"></i></div>
+            <div class="motorista-info">
+                <span>
+                    VEÍCULO: <select class="freeVeic" name="veic" id="inpVeic"></select></span>
+                </span>
+                <span>
+                    MOTORISTA: <select class="freeMot" name="mot" id="inpMot"></select></span>
+                </span>
+                <span>
+                    DESCRIÇÃO: <input type="text" name="desc" id="inpDesc"></span>
+                </span>
+
+                <div class="card-motorista-bottom">
+                    <button class="btnCancelar" onclick="toggleModalCreateOp()">Cancelar</button>
+                    <button class="btnConfirmar" onclick="cadastrarOp()">Confirmar</button>
                 </div>
             </div>
         </div>

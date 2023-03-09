@@ -71,18 +71,37 @@ const read = async (req, res) => {
 }
 
 const update = async (req, res) => {
-    req.body.id = Number(req.body.id)
+    let id = Number(req.body.id)
+    let info = {"id_motorista": Number(req.body.id_motorista), "id_veiculo": Number(req.body.id_veiculo), "descricao": req.body.descricao}
     const operacao = await prisma.operacao.update({
         where: {
-            id: req.body.id
+            id: Number(id)
         },
-        data: req.body
+        data: info
     })
 
     res.status(200).json(operacao).end()
 }
 
 const remove = async (req, res) => {
+    await prisma.veiculo.update({
+        where: {
+            id: Number(req.body.id_veiculo)
+        },
+        data: {
+            disponivel: true
+        }
+    })
+
+    await prisma.motorista.update({
+        where: {
+            id: Number(req.body.id_motorista)
+        },
+        data: {
+            disponivel: true
+        }
+    })
+
     const operacao = await prisma.operacao.delete({
         where: {
             id: Number(req.body.id)

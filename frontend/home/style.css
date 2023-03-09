@@ -697,7 +697,7 @@ input:focus {
   height: 50px!important;
 }
 
-.btnEditarManGeral{
+.btnEditarGeral{
   background-color: #002647;
   border: 2px solid #fff;
   color: white;
@@ -706,7 +706,7 @@ input:focus {
   margin-left: 10px;
 }
 
-.btnFinalizarManGeral{
+.btnFinalizarGeral{
   background-color: #0062a6;
   border: 2px solid #fff;
   color: white;
@@ -1139,11 +1139,104 @@ canvas{
   transform: rotateX(0deg);
 }
 
-.allVeic{
+select{
   flex: 1;
 }
 
 .main-manutencoes{
   display: flex;
   flex-direction: column;
+}
+
+.main-operacoes {
+  display: flex;
+  flex-direction: column;
+}
+
+.op-info {
+  position: relative;
+  display: flex;
+  width: 100%;
+  border: none!important;
+  -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -o-transition: transform .6s ease-in-out;
+    -moz-transition: transform .6s ease-in-out;
+    -webkit-transition: transform .6s ease-in-out;
+    transition: transform .6s ease-in-out;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    -webkit-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+}
+
+.modeloGeraOp{
+  height: 54px;
+  position: relative;
+  perspective: 3000px;
+  -webkit-perspective: 3000px;
+  -moz-perspective: 3000px;
+  -webkit-transform-origin: 100% center;
+  -moz-transform-origin: 100% center;
+  -ms-transform-origin: 100% center;
+  transform-origin: 100% center;
+}
+
+.main-operacoes .table-head > span:nth-child(1){
+  width: 10%!important;
+}
+
+.main-operacoes .table-head > span:nth-child(2){
+  width: calc(65%/2)!important;
+}
+
+.main-operacoes .table-head > span:nth-child(3){
+  width: calc(65%/2)!important;
+}
+
+.main-operacoes .table-head > span:nth-child(4){
+  width: 20%!important;
+}
+
+.main-operacoes .table-head > span:nth-child(5){
+  width: 15%!important;
+}
+/**/
+.main-operacoes .table-body div > span:nth-child(1){
+  width: 10%!important;
+}
+
+.main-operacoes .table-body div > span:nth-child(2){
+  width: calc(65%/2)!important;
+}
+
+.main-operacoes .table-body div > span:nth-child(3){
+  width: calc(65%/2)!important;
+}
+
+.main-operacoes .table-body div > span:nth-child(4){
+  width: 20%!important;
+}
+
+.main-operacoes .table-body div > span:nth-child(5){
+  width: 15%!important;
+}
+
+.modeloGeraOp.flip .row-options {
+  -webkit-transform: rotateX(0deg);
+  -moz-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+}
+
+.modeloGeraOp.flip .op-info {
+  -webkit-transform: rotateX(180deg);
+  -moz-transform: rotateX(180deg);
+  transform: rotateX(180deg);
 }
