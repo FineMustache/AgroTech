@@ -124,7 +124,7 @@ const finish = async (req, res) => {
 
     await prisma.veiculo.update({
         where: {
-            id: operacao.id_veiculo
+            id: req.body.id_veiculo
         },
         data: {
             disponivel: true
@@ -133,7 +133,7 @@ const finish = async (req, res) => {
 
     await prisma.motorista.update({
         where: {
-            id: operacao.id_motorista
+            id: req.body.id_motorista
         },
         data: {
             disponivel: true

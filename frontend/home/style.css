@@ -887,7 +887,7 @@ canvas {
   flex-direction: column;
 }
 
-.dashboard-man{
+.dashboard-man, .dashboard-op{
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -900,7 +900,7 @@ canvas {
   position: absolute;
 }
 
-.graficos-man{
+.graficos-man, .graficos-op{
   overflow-y: auto;
   width: 100%;
   display: flex;
@@ -910,6 +910,10 @@ canvas {
 }
 
 .graficos-man .card{
+  flex-basis: auto;
+}
+
+.graficos-op .card {
   flex-basis: auto;
 }
 

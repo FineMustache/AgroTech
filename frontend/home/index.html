@@ -256,7 +256,87 @@
                       </div>
                     </div>
                 </div>
-                
+                <div class="dashboard-op graf-escondido">
+                    <div class="graficos-op">
+                        <div class="card">
+                            <h2>Operações por Tipo</h2>
+                            <div class="chart-container">
+                                <div class="chart-center">
+                                    <span>Total</span>
+                                    <span id="sum-value-op"></span>
+                                </div>
+                                <canvas id="grafico-freq-op"></canvas>
+                                
+                            </div>
+                            <div class="card-leg legenda-grafico-disp-mot">
+                                <div class="leg leg-carga">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Carga</span>
+                                </div>
+                                <div class="leg leg-visita">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Visita</span>
+                                </div>
+                                <div class="leg leg-vendas">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Vendas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2>Custo Médio de Manutenção</h2>
+                            <div class="chart-container">
+                                <canvas id="grafico-custo" height="300"></canvas>
+                            </div>
+                            <div class="card-leg legenda-grafico-disp-mot">
+                                <div class="leg leg-carga">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Carga</span>
+                                </div>
+                                <div class="leg leg-visita">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Visita</span>
+                                </div>
+                                <div class="leg leg-vendas">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Vendas</span>
+                                </div>
+                            </div>
+                        </div>
+                          <div class="card">
+                            <h2>Tempo Médio de Operação (dias)</h2>
+                            <div class="chart-container">
+                                <canvas id="tempo-medio-op" height="300"></canvas>
+                            </div>
+                            <div class="card-leg legenda-grafico-disp-mot">
+                                <div class="leg leg-carga">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Carga</span>
+                                </div>
+                                <div class="leg leg-visita">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Visita</span>
+                                </div>
+                                <div class="leg leg-vendas">
+                                    <div class="leg-square"></div>
+                                    <span class="leg-span">Vendas</span>
+                                </div>
+                            </div>
+                          </div>
+                          <div class="card" style="width: 612.5px">
+                            <h2>Custo ao Longo do Ano</h2>
+                            <div class="chart-container">
+                                <canvas id="custo-mes-op" width="550"></canvas>
+                            </div>
+                          </div>
+                          <div class="card" style="width: 612.5px">
+                            <h2>Frequência ao Longo do Ano</h2>
+                            <div class="chart-container">
+                                <canvas id="freq-mes-op" width="550"></canvas>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
         </div>
         <div class="main-motoristas main" id="mainMot">
             <div class="page-top">
@@ -380,15 +460,15 @@
                 <div class="right">
 
                     <div class="filter">
-                        <span onclick="toggleFilterMan()"><i class="fa-solid fa-filter"></i> Filtro</span>
+                        <span onclick="toggleFilterOp()"><i class="fa-solid fa-filter"></i> Filtro</span>
                         <div class="filter-db escondido">
                             <label class="container-db">Aberto
-                                <input onclick="filterManChange()" type="checkbox" id="cbManAb" checked>
+                                <input onclick="filterOpChange()" type="checkbox" id="cbOpAb" checked>
                                 <span class="checkmark"></span>
                             </label>
     
                             <label class="container-db">Finalizado
-                                <input onclick="filterManChange()" type="checkbox" id="cbManFec" checked>
+                                <input onclick="filterOpChange()" type="checkbox" id="cbOpFec" checked>
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -418,7 +498,7 @@
                                     </div>
                                     <div class="row-options">
                                         <button onclick="toggleModalEditOp(this.parentNode.parentNode)" class="btnEditarGeral">Editar</button>
-                                        <button onclick="finishOp(this.parentNode.parentNode.id)" class="btnFinalizarGeral">Finalizar</button>
+                                        <button onclick="finishOp(this.parentNode.parentNode.id, this.parentNode.parentNode.getAttribute('vid'), this.parentNode.parentNode.getAttribute('mid'))" class="btnFinalizarGeral">Finalizar</button>
                                     </div>
                                 </div>
                             </div>
@@ -471,7 +551,7 @@
                                     </div>
                                     <div class="row-options">
                                         <button onclick="toggleModalEditMan(this.parentNode.parentNode)" class="btnEditarGeral">Editar</button>
-                                        <button onclick="finishMan(this.parentNode.parentNode.id)" class="btnFinalizarGeral">Finalizar</button>
+                                        <button onclick="finishMan(this.parentNode.parentNode.id, this.parentNode.parentNode.getAttribute('vid'))" class="btnFinalizarGeral">Finalizar</button>
                                     </div>
                                 </div>
                             </div>

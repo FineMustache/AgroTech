@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 const create = async (req, res) => {
     
     req.body.forEach(async m => {
-        await prisma.veiculo.update({
+        let veic = await prisma.veiculo.update({
             where: {
                 id: m.id_veiculo
             },
@@ -13,6 +13,8 @@ const create = async (req, res) => {
                 disponivel: false
             }
         })
+
+        console.log(veic)
     })
 
     const manutencao = await prisma.manutencao.createMany({
@@ -104,7 +106,7 @@ const finish = async (req, res) => {
 
     await prisma.veiculo.update({
         where: {
-            id: manutencao.id_veiculo
+            id: req.body.id_veiculo
         },
         data: {
             disponivel: true
