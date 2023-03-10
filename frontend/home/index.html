@@ -184,7 +184,7 @@
                                 <span>Total</span>
                                 <span id="sum-value-man"></span>
                             </div>
-                            <canvas id="grafico-freq"></canvas>
+                            <canvas id="grafico-freq" height="287"></canvas>
                             
                         </div>
                         <div class="card-leg legenda-grafico-disp-mot">
@@ -205,7 +205,7 @@
                     <div class="card">
                         <h2>Custo Médio de Manutenção</h2>
                         <div class="chart-container">
-                            <canvas id="grafico-custo" height="300"></canvas>
+                            <canvas id="grafico-custo" height="287"></canvas>
                         </div>
                         <div class="card-leg legenda-grafico-disp-mot">
                             <div class="leg leg-carga">
@@ -225,7 +225,7 @@
                       <div class="card">
                         <h2>Tempo Médio de Manutenção (dias)</h2>
                         <div class="chart-container">
-                            <canvas id="tempo-medio-manutencao" height="300"></canvas>
+                            <canvas id="tempo-medio-manutencao" height="287"></canvas>
                         </div>
                         <div class="card-leg legenda-grafico-disp-mot">
                             <div class="leg leg-carga">
@@ -265,7 +265,7 @@
                                     <span>Total</span>
                                     <span id="sum-value-op"></span>
                                 </div>
-                                <canvas id="grafico-freq-op"></canvas>
+                                <canvas id="grafico-freq-op" height="287"></canvas>
                                 
                             </div>
                             <div class="card-leg legenda-grafico-disp-mot">
@@ -286,7 +286,7 @@
                         <div class="card">
                             <h2>Custo Médio de Manutenção</h2>
                             <div class="chart-container">
-                                <canvas id="grafico-custo" height="300"></canvas>
+                                <canvas id="grafico-custo" height="287"></canvas>
                             </div>
                             <div class="card-leg legenda-grafico-disp-mot">
                                 <div class="leg leg-carga">
@@ -306,7 +306,7 @@
                           <div class="card">
                             <h2>Tempo Médio de Operação (dias)</h2>
                             <div class="chart-container">
-                                <canvas id="tempo-medio-op" height="300"></canvas>
+                                <canvas id="tempo-medio-op" height="287"></canvas>
                             </div>
                             <div class="card-leg legenda-grafico-disp-mot">
                                 <div class="leg leg-carga">
@@ -498,7 +498,7 @@
                                     </div>
                                     <div class="row-options">
                                         <button onclick="toggleModalEditOp(this.parentNode.parentNode)" class="btnEditarGeral">Editar</button>
-                                        <button onclick="finishOp(this.parentNode.parentNode.id, this.parentNode.parentNode.getAttribute('vid'), this.parentNode.parentNode.getAttribute('mid'))" class="btnFinalizarGeral">Finalizar</button>
+                                        <button onclick="finishOp(this.parentNode.parentNode.id, this.parentNode.parentNode.getAttribute('vid'), this.parentNode.parentNode.getAttribute('mid'))" class="btnFinalizarGeral escondido">Finalizar</button>
                                     </div>
                                 </div>
                             </div>
@@ -551,7 +551,7 @@
                                     </div>
                                     <div class="row-options">
                                         <button onclick="toggleModalEditMan(this.parentNode.parentNode)" class="btnEditarGeral">Editar</button>
-                                        <button onclick="finishMan(this.parentNode.parentNode.id, this.parentNode.parentNode.getAttribute('vid'))" class="btnFinalizarGeral">Finalizar</button>
+                                        <button onclick="finishMan(this.parentNode.parentNode.id, this.parentNode.parentNode.getAttribute('vid'))" class="btnFinalizarGeral escondido">Finalizar</button>
                                     </div>
                                 </div>
                             </div>

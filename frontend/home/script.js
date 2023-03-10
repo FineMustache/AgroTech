@@ -853,7 +853,22 @@ function carregarManutencoes() {
         document.getElementById('veicManTableBody').innerHTML = ""
         filterManChange()
         response.forEach(m => {
+
+            let model = document.querySelector('.modeloGeraMan').cloneNode(true)
+
+            model.querySelector('#gmPlaca').innerHTML = m.veiculo.placa
+            model.querySelector('#gmDesc').innerHTML = m.descricao
+            model.querySelector('#gmDataIni').innerHTML = new Date(m.data_inicio).toLocaleString('pt-br')
+            model.querySelector('#gmDataFim').innerHTML = m.data_fim == undefined ? '-' : new Date(m.data_fim).toLocaleString('pt-br')
+            model.querySelector('#gmValor').innerHTML = "R$ " + m.valor.toString().replace('.', ',')
+            model.classList.remove('escondido')
+            model.setAttribute('vid', m.veiculo.id)
+            model.id = "m" + m.id
+            model.setAttribute('aberto', m.data_fim == null)
+            document.querySelector('#manGeral').querySelector('.table-body').appendChild(model)
+
             if (m.data_fim == null) {
+                model.querySelector('.btnFinalizarGeral').classList.remove('escondido')
                 let tr = document.createElement('tr')
                 let placa = document.createElement('td')
                 let tipo = document.createElement('td')
@@ -873,19 +888,6 @@ function carregarManutencoes() {
     
                 document.getElementById('veicManTableBody').appendChild(tr)   
             }
-
-            let model = document.querySelector('.modeloGeraMan').cloneNode(true)
-
-            model.querySelector('#gmPlaca').innerHTML = m.veiculo.placa
-            model.querySelector('#gmDesc').innerHTML = m.descricao
-            model.querySelector('#gmDataIni').innerHTML = new Date(m.data_inicio).toLocaleString('pt-br')
-            model.querySelector('#gmDataFim').innerHTML = m.data_fim == undefined ? '-' : new Date(m.data_fim).toLocaleString('pt-br')
-            model.querySelector('#gmValor').innerHTML = "R$ " + m.valor.toString().replace('.', ',')
-            model.classList.remove('escondido')
-            model.setAttribute('vid', m.veiculo.id)
-            model.id = "m" + m.id
-            model.setAttribute('aberto', m.data_fim == null)
-            document.querySelector('#manGeral').querySelector('.table-body').appendChild(model)
         })
 
         // gerar gráfico de frequência de manutenções por tipo de veículo
@@ -1174,29 +1176,9 @@ function carregarOperacoes() {
     fetch('http://localhost:3000/agrotech/operacoes', options)
     .then(response => response.json())
     .then(response => {
+        document.getElementById('veicOpTableBody').innerHTML = ""
         response.forEach(o => {
-            document.getElementById('veicOpTableBody').innerHTML = ""
             filterOpChange()
-            if (o.data_retorno == null) {
-                let tr = document.createElement('tr')
-                let placa = document.createElement('td')
-                let tipo = document.createElement('td')
-                let desc = document.createElement('td')
-                let inicio = document.createElement('td')
-                let fim = document.createElement('td')
-                let motor = document.createElement('td')
-
-                placa.innerHTML = o.veiculo.placa
-                tipo.innerHTML = o.veiculo.tipo.slice(0,1).toUpperCase() + o.veiculo.tipo.slice(1)
-                desc.innerHTML = o.descricao
-                inicio.innerHTML = new Date(o.data_saida).toLocaleString('pt-br')
-                fim.innerHTML = o.data_retorno !== null ? new Date(o.data_retorno).toLocaleString('pt-br') : '-'
-                motor.innerHTML = o.motorista.nome
-
-                tr.append(placa, tipo, desc, inicio, fim, motor)
-
-                document.getElementById('veicOpTableBody').appendChild(tr)
-            }
 
             let model = document.querySelector('.modeloGeraOp').cloneNode(true)
 
@@ -1212,8 +1194,30 @@ function carregarOperacoes() {
             model.setAttribute('aberto', o.data_retorno == null)
             document.querySelector('#opGeral').querySelector('.table-body').appendChild(model)
 
-            
+            if (o.data_retorno == null) {
+                model.querySelector('.btnFinalizarGeral').classList.remove('escondido')
+                let tr = document.createElement('tr')
+                let placa = document.createElement('td')
+                let tipo = document.createElement('td')
+                let desc = document.createElement('td')
+                let inicio = document.createElement('td')
+                let fim = document.createElement('td')
+                let motor = document.createElement('td')
+    
+                placa.innerHTML = o.veiculo.placa
+                tipo.innerHTML = o.veiculo.tipo.slice(0,1).toUpperCase() + o.veiculo.tipo.slice(1)
+                desc.innerHTML = o.descricao
+                inicio.innerHTML = new Date(o.data_saida).toLocaleString('pt-br')
+                fim.innerHTML = o.data_retorno !== null ? new Date(o.data_retorno).toLocaleString('pt-br') : '-'
+                motor.innerHTML = o.motorista.nome
+    
+                tr.append(placa, tipo, desc, inicio, fim, motor)
+    
+                document.getElementById('veicOpTableBody').appendChild(tr)
+            }
         })
+
+        
 
         // gerar gráfico de frequência de manutenções por tipo de veículo
         const freqOp = {};
