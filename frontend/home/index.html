@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <title>Home - AgroTech</title>
     <script>
         let uinfo = window.localStorage.getItem('@uinfo')
@@ -284,9 +287,9 @@
                             </div>
                         </div>
                         <div class="card">
-                            <h2>Custo Médio de Manutenção</h2>
+                            <h2>Operações por Motorista</h2>
                             <div class="chart-container">
-                                <canvas id="grafico-custo" height="287"></canvas>
+                                <canvas id="grafico-op-mot" height="287"></canvas>
                             </div>
                             <div class="card-leg legenda-grafico-disp-mot">
                                 <div class="leg leg-carga">
@@ -323,16 +326,10 @@
                                 </div>
                             </div>
                           </div>
-                          <div class="card" style="width: 612.5px">
-                            <h2>Custo ao Longo do Ano</h2>
+                          <div class="card" style="width: 1250px">
+                            <h2>Média de Horas por Operação (horas)</h2>
                             <div class="chart-container">
-                                <canvas id="custo-mes-op" width="550"></canvas>
-                            </div>
-                          </div>
-                          <div class="card" style="width: 612.5px">
-                            <h2>Frequência ao Longo do Ano</h2>
-                            <div class="chart-container">
-                                <canvas id="freq-mes-op" width="550"></canvas>
+                                <canvas id="med-horas-op" height="300" width="1200"></canvas>
                             </div>
                           </div>
                         </div>

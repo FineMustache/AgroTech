@@ -3,6 +3,8 @@ var graficoCusto = {"limpo": true}
 var tempoMedioManutencaoChart = {"limpo": true}
 var custoPorMesManutencaoChart = {"limpo": true}
 var freqPorMesManutencaoChart = {"limpo": true}
+var mediaHorasOpMotChart = {"limpo": true}
+var graficoOpMot = {"limpo": true}
 
 var graficoFreqOp = {"limpo": true}
 var graficoCustoOp = {"limpo": true}
@@ -12,6 +14,8 @@ var freqPorMesOperacaoChart = {"limpo": true}
 
 var myChart = {"limpo": true}
 var myChartMot = {"limpo": true}
+
+const {Utils} = Chart
 
 function togglesbi(ev, mainId) {
     document.querySelectorAll('.sb-i').forEach(i => {
@@ -1217,7 +1221,7 @@ function carregarOperacoes() {
             }
         })
 
-        
+        mediaHorasOpMot(response)
 
         // gerar gráfico de frequência de manutenções por tipo de veículo
         const freqOp = {};
@@ -1267,58 +1271,6 @@ function carregarOperacoes() {
         }
         });
 
-        // gerar gráfico de custo médio de manutenções por tipo de veículo
-        // const custoManutencoes = {};
-        // response.forEach(manutencao => {
-        // const tipoVeiculo = manutencao.veiculo.tipo;
-        // const valorManutencao = manutencao.valor;
-        // if (!custoManutencoes[tipoVeiculo]) {
-        //     custoManutencoes[tipoVeiculo] = {
-        //     total: valorManutencao,
-        //     qtd: 1
-        //     };
-        // } else {
-        //     custoManutencoes[tipoVeiculo].total += valorManutencao;
-        //     custoManutencoes[tipoVeiculo].qtd++;
-        // }
-        // });
-
-        // const labelsCusto = ['carga', 'visita', 'vendas'];
-        // const dataCusto = [];
-        // console.log(custoManutencoes)
-        // labelsCusto.forEach(label => {
-        // custoManutencoes[label] !== undefined ? dataCusto.push(custoManutencoes[label].total / custoManutencoes[label].qtd) : dataCusto.push(0);
-        // });
-
-        // if (!graficoCusto.limpo) {
-        //     graficoCusto.destroy()
-        // }
-
-        // graficoCusto = new Chart(document.getElementById('grafico-custo'), {
-        // type: 'bar',
-        // data: {
-        //     labels: labelsCusto.map(k => k = k.slice(0,1).toUpperCase() + k.slice(1)),
-        //     datasets: [{
-        //     label: 'Custo Médio de Manutenções',
-        //     data: dataCusto,
-        //     backgroundColor: [
-        //         'rgba(255, 99, 132)',
-        //         'rgba(54, 162, 235)',
-        //         'rgba(255, 206, 86)'
-        //     ],
-        //     borderColor: 'white',
-        //     borderWidth: 1
-        //     }]
-        // },
-        // options: {
-        //     plugins: {
-        //         legend: {
-        //             display: false
-        //         }
-        //     }
-        // }
-        // });
-
         // ... código anterior
 
         const dadosPreparados = prepararDadosParaDashboardOp(response)
@@ -1328,11 +1280,104 @@ function carregarOperacoes() {
         const tempoMedioOperacaoVendas = calcularTempoMedioOperacao(dadosPreparados.operacoesVendas, "vendas");
         const tempoMedioOperacaoVisita = calcularTempoMedioOperacao(dadosPreparados.operacoesVisita, "visita");
 
-        console.log(tempoMedioOperacaoCarga)
 
         // Cria o gráfico de tempo médio de manutenções por tipo de veículo
-        const tempoMedioOperacaoCtx = document.getElementById('tempo-medio-op').getContext('2d');
+        const mediaHorasOpMotCtx = document.getElementById('med-horas-op').getContext('2d');
         
+        if (!mediaHorasOpMotChart.limpo) {
+            mediaHorasOpMotChart.destroy()
+        }
+
+        const dadosMediaHorasOpMot = mediaHorasOpMot(response)
+
+        var COLORS = interpolateColors(dadosMediaHorasOpMot.mediaHoras.length, d3.interpolateInferno, {
+            colorStart: 0,
+            colorEnd: 1,
+            useEndAsStart: false,
+          })
+
+        mediaHorasOpMotChart = new Chart(mediaHorasOpMotCtx, {
+            type: 'bar',
+            data: {
+                labels: dadosMediaHorasOpMot.motoristasDiferentes,
+                datasets: [{
+                    label: 'Tempo Médio de Operação (dias)',
+                    data: dadosMediaHorasOpMot.mediaHoras,
+                    backgroundColor: COLORS,
+                    borderColor: 'white',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        const nOpMot = nOpMotTipo(response)
+
+        if (!graficoOpMot.limpo) {
+            graficoOpMot.destroy()
+        }
+
+        graficoOpMot = new Chart(document.getElementById('grafico-op-mot'), {
+        type: 'bar',
+        data: {
+            labels: dadosMediaHorasOpMot.motoristasDiferentes,
+            datasets: [
+                {
+                    label: 'Operações de Carga',
+                    data: nOpMot.carga,
+                    backgroundColor: 'rgba(255, 99, 132)',
+                    borderColor: 'white',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Operações de Visita',
+                    data: nOpMot.visita,
+                    backgroundColor: 'rgba(54, 162, 235)',
+                    borderColor: 'white',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Operações de Vendas',
+                    data: nOpMot.vendas,
+                    backgroundColor: 'rgba(255, 206, 86)',
+                    borderColor: 'white',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            plugins: {
+              title: {
+                display: true,
+                text: 'Chart.js Bar Chart - Stacked'
+              },
+              legend: {
+                display: false
+              }
+            },
+            responsive: true,
+            scales: {
+              x: {
+                stacked: true,
+              },
+              y: {
+                stacked: true,
+                ticks:{
+                    stepSize: 1
+                }
+              }
+            }
+          }
+        });
+
+        const tempoMedioOperacaoCtx = document.getElementById('tempo-medio-op').getContext('2d');
+
         if (!tempoMedioOperacaoChart.limpo) {
             tempoMedioOperacaoChart.destroy()
         }
@@ -1361,141 +1406,6 @@ function carregarOperacoes() {
                 }
             }
         });
-
-        // const mediaMesCarga = separarMediaManutencaoPorMes(response, 'carga')
-        // // let dataCPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        // // mediaMesCarga.forEach(m => {
-        // //     dataCPMM[Number(m.mes.split('-')[1])] += m.media
-        // // })
-        // const mediaMesVendas = separarMediaManutencaoPorMes(response, 'vendas')
-        // // let dataVsPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        // // mediaMesVendas.forEach(m => {
-        // //     dataVsPMM[Number(m.mes.split('-')[1])] += m.media
-        // // })
-        // const mediaMesVisita = separarMediaManutencaoPorMes(response, 'visita')
-        // // let dataVPMM = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        // // mediaMesVisita.forEach(m => {
-        // //     dataVPMM[Number(m.mes.split('-')[1])] += m.media
-        // // })
-
-        // const custoPorMesManutencaoCtx = document.getElementById('custo-mes-manutencao').getContext('2d')
-
-        // // const gradientCarga = custoPorMesManutencaoCtx.createLinearGradient(0, 0, 0, 450);
-
-        // // gradientCarga.addColorStop(0, 'rgba(255, 99, 132, 1)');
-        // // gradientCarga.addColorStop(0.5, 'rgba(255, 99, 132, 0.5)');
-        // // gradientCarga.addColorStop(1, 'rgba(255, 99, 132, 0)');
-
-        // // const gradientVendas = custoPorMesManutencaoCtx.createLinearGradient(0, 0, 0, 450);
-
-        // // gradientVendas.addColorStop(0, 'rgba(255, 206, 86, 1)');
-        // // gradientVendas.addColorStop(0.5, 'rgba(255, 206, 86, 0.5)');
-        // // gradientVendas.addColorStop(1, 'rgba(255, 206, 86, 0)');
-
-        // // const gradientVisita = custoPorMesManutencaoCtx.createLinearGradient(0, 0, 0, 450);
-
-        // // gradientVisita.addColorStop(0, 'rgba(54, 162, 235, 1)');
-        // // gradientVisita.addColorStop(0.5, 'rgba(54, 162, 235, 0.5)');
-        // // gradientVisita.addColorStop(1, 'rgba(54, 162, 235, 0)');
-
-        // if (!custoPorMesManutencaoChart.limpo) {
-        //     custoPorMesManutencaoChart.destroy()
-        // }
-
-        // console.log(mediaMesCarga)
-
-        // custoPorMesManutencaoChart = new Chart(custoPorMesManutencaoCtx, {
-        //     type: 'line',
-        //     data: {
-        //         labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        //         datasets: [
-        //             {
-        //                 label: 'Carga',
-        //                 data: mediaMesCarga,
-        //                 fill: false,
-        //                 backgroundColor: 'rgba(255, 99, 132)',
-        //                 borderColor: 'rgba(255, 99, 132)',
-        //                 tension: 0.1
-        //               },
-        //               {
-        //                 label: 'Vendas',
-        //                 data: mediaMesVendas,
-        //                 fill: false,
-        //                 borderColor: 'rgba(255, 206, 86)',
-        //                 backgroundColor: 'rgba(255, 206, 86)',
-        //                 tension: 0.1
-        //               },
-        //               {
-        //                 label: 'Visita',
-        //                 data: mediaMesVisita,
-        //                 fill: false,
-        //                 borderColor: 'rgba(54, 162, 235)',
-        //                 backgroundColor: 'rgba(54, 162, 235)',
-        //                 tension: 0.1
-        //               }
-        //         ]
-        //     },
-        //     options: {
-        //         responsive: true,
-        //         aspectRatio: 5 / 2
-        //     }
-        // })
-
-
-        // const freqManMesCarga = contarManutencoesPorMes(response, 'carga')
-        // const freqManMesVendas = contarManutencoesPorMes(response, 'vendas')
-        // const freqManMesVisita = contarManutencoesPorMes(response, 'visita')
-        // const freqPorMesManutencaoCtx = document.getElementById('freq-mes-manutencao').getContext('2d')
-
-        // console.log(freqManMesCarga)
-
-        // if (!freqPorMesManutencaoChart.limpo) {
-        //     freqPorMesManutencaoChart.destroy()
-        // }
-
-        // freqPorMesManutencaoChart = new Chart(freqPorMesManutencaoCtx, {
-        //     type: 'line',
-        //     data: {
-        //         labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        //         datasets: [
-        //             {
-        //                 label: 'Carga',
-        //                 data: freqManMesCarga,
-        //                 fill: false,
-        //                 backgroundColor: 'rgba(255, 99, 132)',
-        //                 borderColor: 'rgba(255, 99, 132)',
-        //                 tension: 0.1
-        //               },
-        //               {
-        //                 label: 'Vendas',
-        //                 data: freqManMesVendas,
-        //                 fill: false,
-        //                 borderColor: 'rgba(255, 206, 86)',
-        //                 backgroundColor: 'rgba(255, 206, 86)',
-        //                 tension: 0.1
-        //               },
-        //               {
-        //                 label: 'Visita',
-        //                 data: freqManMesVisita,
-        //                 fill: false,
-        //                 borderColor: 'rgba(54, 162, 235)',
-        //                 backgroundColor: 'rgba(54, 162, 235)',
-        //                 tension: 0.1
-        //               }
-        //         ]
-        //     },
-        //     options: {
-        //         responsive: true,
-        //         aspectRatio: 5 / 2,
-        //         scales: {
-        //             y: {
-        //                 ticks: {
-        //                     stepSize: 1
-        //                 }
-        //             }
-        //         }
-        //     }
-        // })
     })
     .catch(err => console.error(err));
 }
@@ -1989,4 +1899,99 @@ function prepararDadosParaDashboardOp(operacoes) {
       operacoesVendas,
       operacoesVisita,
     };
+  }
+
+  function mediaHorasOpMot(operacoes) {
+    const mapeamentoMotoristas = {};
+    const mediaHoras = []
+    const idDiferentes = []
+    const motoristasDiferentes = operacoes.reduce((acc, viagem) => {
+    const { id, nome } = viagem.motorista;
+    if (!mapeamentoMotoristas[id]) {
+        mapeamentoMotoristas[id] = nome.split(' ')[0] + " " + nome.split(' ').at(-1).slice(0, 1) + ".";
+        acc.push(nome.split(' ')[0] + " " + nome.split(' ').at(-1).slice(0, 1) + ".");
+        mediaHoras.push(0)
+        idDiferentes.push(id)
+    }
+    return acc;
+    }, []);
+
+    idDiferentes.forEach((m, index) => {
+        let med = 0
+        let nop = 0
+        operacoes.forEach(o => {
+            if (m == o.motorista.id) {
+                const dataInicio = new Date(o.data_saida);
+                const dataFim = o.data_retorno ? new Date(o.data_retorno) : new Date();
+                let diferenca = (dataFim - dataInicio) / 3600000
+                med += diferenca
+                nop++
+            }
+        })
+
+        med = (med/nop).toFixed(2)
+        mediaHoras[index] = Number(med)
+    })
+
+    return {
+        mediaHoras,
+        motoristasDiferentes
+    }
+  }
+
+  function calculatePoint(i, intervalSize, colorRangeInfo) {
+    var { colorStart, colorEnd, useEndAsStart } = colorRangeInfo;
+    return (useEndAsStart
+      ? (colorEnd - (i * intervalSize))
+      : (colorStart + (i * intervalSize)));
+  }
+
+  function interpolateColors(dataLength, colorScale, colorRangeInfo) {
+    var { colorStart, colorEnd } = colorRangeInfo;
+    var colorRange = colorEnd - colorStart;
+    var intervalSize = colorRange / dataLength;
+    var i, colorPoint;
+    var colorArray = [];
+  
+    for (i = 0; i < dataLength; i++) {
+      colorPoint = calculatePoint(i, intervalSize, colorRangeInfo);
+      colorArray.push(colorScale(colorPoint));
+    }
+  
+    return colorArray;
+  }  
+
+
+  function nOpMotTipo(operacoes) {
+    const mapeamentoMotoristas = {};
+    const nOp = {
+        'carga': [],
+        'visita': [],
+        'vendas': []
+    }
+    const idDiferentes = []
+    const motoristasDiferentes = operacoes.reduce((acc, viagem) => {
+    const { id, nome } = viagem.motorista;
+    if (!mapeamentoMotoristas[id]) {
+        mapeamentoMotoristas[id] = nome.split(' ')[0] + " " + nome.split(' ').at(-1).slice(0, 1) + ".";
+        acc.push(nome.split(' ')[0] + " " + nome.split(' ').at(-1).slice(0, 1) + ".");
+        nOp.carga.push(0)
+        nOp.visita.push(0)
+        nOp.vendas.push(0)
+        idDiferentes.push(id)
+    }
+    return acc;
+    }, []);
+
+    console.log(idDiferentes)
+
+    idDiferentes.forEach((m, index) => {
+        operacoes.forEach(o => {
+            if (m == o.motorista.id) {
+                nOp[o.veiculo.tipo][index]++
+            }
+        })
+    })
+    console.log(nOp)
+    return nOp
   }
