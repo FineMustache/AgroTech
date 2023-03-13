@@ -487,6 +487,13 @@ function carregarVeiculos() {
                 s.innerHTML = ""
             })
             filterVeicChange()
+            let uinfo = window.localStorage.getItem('@uinfo')
+            if (uinfo == null) {
+                window.location.href = "../login"
+            }else{
+                uinfo = JSON.parse(uinfo)
+                
+            }
             response.forEach(v => {
                 let modelo = document.querySelector('.modeloVeicGeral').cloneNode(true)
                 modelo.querySelector('#vgPlaca').innerHTML = v.placa
@@ -496,7 +503,7 @@ function carregarVeiculos() {
                 modelo.querySelector('#vgDisp').innerHTML = v.disponivel ? "Livre" : "Ocupado"
                 modelo.querySelector('#vgNop').innerHTML = v.operacoes.length
                 modelo.querySelector('#vgNman').innerHTML = v.manutencoes.length
-                modelo.addEventListener('click', () => toggleModalEditVeic(v))
+                if (uinfo.tipo !== 'funcionario') modelo.addEventListener('click', () => toggleModalEditVeic(v))                
                 modelo.setAttribute('disponibilidade', v.disponivel)
 
                 modelo.classList.remove('escondido')
@@ -856,6 +863,13 @@ function carregarManutencoes() {
     .then(response => {
         document.getElementById('veicManTableBody').innerHTML = ""
         filterManChange()
+        let uinfo = window.localStorage.getItem('@uinfo')
+        if (uinfo == null) {
+            window.location.href = "../login"
+        }else{
+            uinfo = JSON.parse(uinfo)
+            
+        }
         response.forEach(m => {
 
             let model = document.querySelector('.modeloGeraMan').cloneNode(true)
@@ -869,6 +883,9 @@ function carregarManutencoes() {
             model.setAttribute('vid', m.veiculo.id)
             model.id = "m" + m.id
             model.setAttribute('aberto', m.data_fim == null)
+            if (uinfo.tipo == 'funcionario') {
+                model.removeAttribute('onclick')   
+            }
             document.querySelector('#manGeral').querySelector('.table-body').appendChild(model)
 
             if (m.data_fim == null) {
@@ -1181,9 +1198,17 @@ function carregarOperacoes() {
     .then(response => response.json())
     .then(response => {
         document.getElementById('veicOpTableBody').innerHTML = ""
-        response.forEach(o => {
-            filterOpChange()
+        filterOpChange()
+        let uinfo = window.localStorage.getItem('@uinfo')
+            if (uinfo == null) {
+                window.location.href = "../login"
+            }else{
+                uinfo = JSON.parse(uinfo)
+                
+            }
 
+        response.forEach(o => {
+            
             let model = document.querySelector('.modeloGeraOp').cloneNode(true)
 
             model.querySelector('#goPlaca').innerHTML = o.veiculo.placa
@@ -1196,6 +1221,9 @@ function carregarOperacoes() {
             model.setAttribute('mid', o.motorista.id)
             model.id = "o" + o.id
             model.setAttribute('aberto', o.data_retorno == null)
+            if (uinfo.tipo == 'funcionario') {
+                model.removeAttribute('onclick')   
+            }
             document.querySelector('#opGeral').querySelector('.table-body').appendChild(model)
 
             if (o.data_retorno == null) {

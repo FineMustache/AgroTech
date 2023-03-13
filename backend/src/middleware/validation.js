@@ -22,7 +22,7 @@ const permitir = (req, res) => {
         if (err != null) res.status(401).json({...err, "validation": false}).end()
         else{
             if(data["uid"] == req.body.id){
-                res.status(200).json({"validation": true}).end()
+                res.status(200).json({"validation": true, "tipo": data.role}).end()
             }
             else{
                 res.status(401).json({"validation": false}).end()

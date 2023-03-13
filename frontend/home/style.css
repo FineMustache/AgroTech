@@ -1244,3 +1244,7 @@ select{
   -moz-transform: rotateX(180deg);
   transform: rotateX(180deg);
 }
+
+.op-info:hover {
+  background-color: #c1cddd;
+}

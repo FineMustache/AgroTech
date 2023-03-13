@@ -32,6 +32,13 @@
                     if (!response.validation) {
                         window.localStorage.removeItem('@uinfo')
                         window.location.href = "../login"
+                    } else {
+                        if (response.tipo == "funcionario") {
+                            let link = document.createElement('link')
+                            link.rel = 'stylesheet'
+                            link.href = 'styleFunc.css'
+                            document.head.appendChild(link)
+                        }
                     }
                 })
                 .catch(err => console.error(err));
@@ -337,7 +344,7 @@
         </div>
         <div class="main-motoristas main" id="mainMot">
             <div class="page-top">
-                <button class="btnCadastrar" onclick="toggleModalCreateMotorista()">Cadastrar</button>
+                <button class="btnCadastrar exclusivo" onclick="toggleModalCreateMotorista()">Cadastrar</button>
                 <div class="right">
                     <div class="filter">
                         <span onclick="toggleFilterMotoristas()"><i class="fa-solid fa-filter"></i> Filtro</span>
@@ -359,7 +366,7 @@
             <div class="page-motoristas">
                 <div class="card-motorista modelo">
                     <div class="card-motorista-top"><i onclick="toggleModalEditMotorista(this.parentNode.parentNode)"
-                            class="fa-sharp fa-solid fa-pen"></i></div>
+                            class="fa-sharp fa-solid fa-pen exclusivo"></i></div>
                     <div class="motorista-icon">
                         <span><i class="fa-solid fa-user"></i></span>
                     </div>
@@ -385,19 +392,9 @@
         </div>
         <div class="main-veiculos main" id="mainVeic">
             <div class="page-top">
-                <button class="btnCadastrar" onclick="toggleModalCreateVeic()">Cadastrar</button>
+                <button class="btnCadastrar exclusivo" onclick="toggleModalCreateVeic()">Cadastrar</button>
                 <div class="right">
-                    <div class="showVeic">
-                        
-                        <div class="wrap-radio">
-                            <div onclick="toggleShowVeic(1, 2)" class="radio-opt-1 radio-opt-active">
-                                <span>Geral</span>
-                            </div>
-                            <div onclick="toggleShowVeic(2, 1)" class="radio-opt-2">
-                                <span>Segmentado</span>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="filter">
                         <span onclick="toggleFilterVeic()"><i class="fa-solid fa-filter"></i> Filtro</span>
                         <div class="filter-db escondido">
@@ -453,7 +450,7 @@
         </div>
         <div class="main-operacoes main" id="mainOp">
             <div class="page-top">
-                <button class="btnCadastrar" onclick="toggleModalCreateOp()">Cadastrar</button>
+                <button class="btnCadastrar exclusivo" onclick="toggleModalCreateOp()">Cadastrar</button>
                 <div class="right">
 
                     <div class="filter">
@@ -506,7 +503,7 @@
         </div>
         <div class="main-manutencoes main" id="mainMan">
             <div class="page-top">
-                <button class="btnCadastrar" onclick="toggleModalCreateMan()">Cadastrar</button>
+                <button class="btnCadastrar exclusivo" onclick="toggleModalCreateMan()">Cadastrar</button>
                 <div class="right">
 
                     <div class="filter">
