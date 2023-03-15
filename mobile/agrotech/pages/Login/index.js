@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@expo-google-fonts/kanit';
-import { TextInput } from 'react-native-web';
+import { TextInput } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const colors = {
@@ -41,6 +42,9 @@ export default function LoginScreen({navigation}) {
     const [errOn, setErrOn] = React.useState(false)
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    // This function will be triggered when the button is pressed
 
     let [fontsLoaded] = useFonts({
         Kanit_400Regular,
@@ -54,6 +58,7 @@ export default function LoginScreen({navigation}) {
 
       const logar = () => {
         if (username.length > 0 && password.length > 0) {
+            setIsLoading(true);
             const options = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -70,11 +75,14 @@ export default function LoginScreen({navigation}) {
                     }else{
                         setErrOn(true)
                     }
+                    
                 })
-                .catch(err => console.error(err));
+                .catch(err => console.log(err))
+                .finally(() => setIsLoading(false));
         }
         
     }
+      
     
     return (
       <View style={styles.container}>
@@ -83,7 +91,11 @@ export default function LoginScreen({navigation}) {
             <TextInput secureTextEntry={true} placeholder={"Senha"} style={styles.input} placeholderTextColor={"#758594"} onChangeText={(val) => {setPassword(val)}}/>
             <Text style={{...styles.font, color: '#a00', marginTop: 20, display: errOn ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center', width: '100%'}}>Credenciais Inválidas</Text>
             <TouchableOpacity onPress={() => logar()} style={styles.cta}>
-                <TextOS texto="Entrar" style={{textAlign: 'center'}} />
+            <View>
+              {isLoading && <ActivityIndicator size="small" color="white" />}
+              {!isLoading && <TextOS texto="Entrar" style={{textAlign: 'center'}} />}
+            </View>
+                
             </TouchableOpacity>
         </View>
       </View>
