@@ -10,38 +10,27 @@ import { Swipeable } from "react-native-gesture-handler";
 
 import { MaterialIcons } from '@expo/vector-icons';
 
-const Veiculo = (props) => {
-  const {v, onPress} = props
+const Manutencao = (props) => {
+  const {m, onPress} = props
 
   return (
     <View style={{ marginBottom: 5, shadowColor: "rgb(0,0,0)"}}>
       <Swipeable
         renderRightActions={() => (
-          <TouchableOpacity style={styles.swipeableAction}>
+          <TouchableOpacity disabled={m.data_fim ? true : false} style={{...styles.swipeableAction, opacity: m.data_fim ? .5 : 1}}>
             <Text>
-            <MaterialIcons name="edit" size={24} color="white" onPress={() => onPress(v)} />
+            <MaterialIcons name="check" size={24} color="white" onPress={() => onPress(true)} />
             </Text>
           </TouchableOpacity>
         )}
       >
         <View style={styles.swipeableItem}>
-          <View style={{width: '22%'}}>
-            <Text style={{textAlign: 'center'}}>{v.placa}</Text>
-          </View>
-          <View style={{width: '25%'}}>
-            <Text style={{textAlign: 'center'}}>{v.modelo}</Text>
-          </View>
-          <View style={{width: '22%'}}>
-            <Text style={{textAlign: 'center'}}>{v.marca}</Text>
-          </View>
-          <View style={{width: '18%'}}>
-            <Text style={{textAlign: 'center'}}>{v.tipo.slice(0,1).toUpperCase() + v.tipo.slice(1)}</Text>
-          </View>
-          <View style={{width: '15%'}}>
-            <Text style={{textAlign: 'center'}}>
-              {v.disponivel && <MaterialIcons name="check-circle" size={24} color="green" />}
-              {!v.disponivel && <MaterialIcons name="cancel" size={24} color="red" />}
-            </Text>
+          <View>
+            <Text>Placa: <Text>{m.veiculo.placa}</Text></Text>
+            <Text>Descrição: <Text>{m.descricao}</Text></Text>
+            <Text>Data Início: <Text>{new Date(m.data_inicio).toLocaleString('pt-br')}</Text></Text>
+            <Text>Data Fim: <Text>{m.data_fim ? new Date(m.data_fim).toLocaleString('pt-br') : "-"}</Text></Text>
+            <Text>Valor: <Text>R$ {parseFloat(m.valor).toFixed(2).replace('.',',')}</Text></Text>
           </View>
         </View>
       </Swipeable>
@@ -61,7 +50,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-    height: 50,
+    // height: 50,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center'
@@ -75,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Veiculo;
+export default Manutencao;

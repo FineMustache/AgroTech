@@ -1,11 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import Veiculo from "../../components/Veiculo";
+import Manutencao from "../../components/Manutencao";
 import {Picker} from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 
-const Veiculos = () => {
+const Manutencoes = () => {
+  const [man, setMan] = React.useState([])
   const [veic, setVeic] = React.useState([])
   const [modalOn, setModalOn] = React.useState(false)
   const [placa, setPlaca] = React.useState("")
@@ -22,19 +23,19 @@ const Veiculos = () => {
   const carregar = () => {
     const options = {method: 'GET'};
 
+    fetch('http://localhost:3000/agrotech/manutencoes', options)
+    .then(response => response.json())
+    .then(response => setMan(response))
+    .catch(err => console.log(err))
+
     fetch('http://localhost:3000/agrotech/veiculos', options)
     .then(response => response.json())
-    .then(response => setVeic(response))
+    .then(response => {
+        if (condition) {
+            
+        }
+    })
     .catch(err => console.log(err))
-  }
-
-  const showEdit = (v) => {
-    setPlaca(v.placa)
-    setModelo(v.modelo)
-    setMarca(v.marca)
-    setTipo(v.tipo)
-    setSelectedId(v.id)
-    setModalOn(true)
   }
 
   const excluir = (id) => {
@@ -56,7 +57,7 @@ const Veiculos = () => {
       .finally(() => setIsLoading(false));
   }
 
-  const editar = (id) => {
+  const cadastrar = (id) => {
     setIsLoading(true);
     
     const options = {
@@ -89,7 +90,16 @@ const Veiculos = () => {
           </View>
           <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center', width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Text style={{marginRight: 5}}>PLACA:</Text>
-            <TextInput onChangeText={(value) => setPlaca(value)} value={placa} style={{borderBottomWidth: 1, borderBottomColor: 'black', width: '75%', padding: 5}} />
+            <Picker style={{padding: 5}}
+            selectedValue={tipo}
+            onValueChange={(itemValue, itemIndex) =>
+              setTipo(itemValue)
+            }
+          >
+            <Picker.Item label="Carga" value="carga" />
+            <Picker.Item label="Vendas" value="vendas" />
+            <Picker.Item label="Visita" value="visita" />
+          </Picker>
           </View>
           <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center', width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Text style={{marginRight: 5}}>MODELO:</Text>
@@ -124,27 +134,15 @@ const Veiculos = () => {
       }
         
       </View>
-      <View style={{display: 'flex', width: '100%', flexDirection: 'row', padding: 10, backgroundColor: "#002647"}}>
-        <View style={{width: '22%'}}>
-          <Text style={{color: 'white', textAlign: 'center'}}>Placa</Text>
-        </View>
-        <View style={{width: '25%'}}>
-          <Text style={{color: 'white', textAlign: 'center'}}>Modelo</Text>
-        </View>
-        <View style={{width: '22%'}}>
-          <Text style={{color: 'white', textAlign: 'center'}}>Marca</Text>
-        </View>
-        <View style={{width: '18%'}}>
-          <Text style={{color: 'white', textAlign: 'center'}}>Tipo</Text>
-        </View>
-        <View style={{width: '15%'}}>
-          <Text style={{color: 'white', textAlign: 'center'}}>Disp.</Text>
-        </View>
+      <View style={{alignItems: 'flex-start'}}>
+        <TouchableOpacity style={{backgroundColor: '#002647', paddingVertical: 5, paddingHorizontal: 10, marginBottom: 10}}>
+            <Text style={{color: 'white', fontSize: 20}}>Cadastrar</Text>
+        </TouchableOpacity>
       </View>
       <ScrollView style={{flex: 1}}>
-        {veic.map((v, index) => {
+        {man.map((m, index) => {
           return(
-            <Veiculo key={index} v={v} onPress={showEdit}/>
+            <Manutencao key={index} m={m} onPress={setModalOn}/>
           )
         })}
 
@@ -164,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Veiculos;
+export default Manutencoes;
