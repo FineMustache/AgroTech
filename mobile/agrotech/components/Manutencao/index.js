@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
@@ -14,15 +13,21 @@ const Manutencao = (props) => {
   const {m, onPress} = props
 
   return (
-    <View style={{ marginBottom: 5, shadowColor: "rgb(0,0,0)"}}>
+    <View style={{ marginBottom: 5, shadowColor: "rgb(0,0,0)", opacity: m.data_fim ? .5 : 1}}>
       <Swipeable
-        renderRightActions={() => (
-          <TouchableOpacity disabled={m.data_fim ? true : false} style={{...styles.swipeableAction, opacity: m.data_fim ? .5 : 1}}>
-            <Text>
-            <MaterialIcons name="check" size={24} color="white" onPress={() => onPress(true)} />
-            </Text>
-          </TouchableOpacity>
-        )}
+        renderRightActions={() => {
+          if (m.data_fim) {
+            return(null)
+          } else {
+            return(
+              <TouchableOpacity disabled={m.data_fim ? true : false} style={{...styles.swipeableAction,}}>
+                <Text>
+                <MaterialIcons name="check" size={24} color="white" onPress={() => onPress(true)} />
+                </Text>
+              </TouchableOpacity>
+            )
+          }
+          }}
       >
         <View style={styles.swipeableItem}>
           <View>

@@ -1347,6 +1347,8 @@ function carregarOperacoes() {
 
         const nOpMot = nOpMotTipo(response)
 
+        console.log(nOpMot)
+
         if (!graficoOpMot.limpo) {
             graficoOpMot.destroy()
         }
@@ -2011,8 +2013,6 @@ function prepararDadosParaDashboardOp(operacoes) {
     return acc;
     }, []);
 
-    console.log(idDiferentes)
-
     idDiferentes.forEach((m, index) => {
         operacoes.forEach(o => {
             if (m == o.motorista.id) {
@@ -2020,6 +2020,5 @@ function prepararDadosParaDashboardOp(operacoes) {
             }
         })
     })
-    console.log(nOp)
     return nOp
   }

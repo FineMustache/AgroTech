@@ -6,8 +6,8 @@ import {Picker} from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 
 const Manutencoes = () => {
+  const [manO, setManO] = React.useState([])
   const [man, setMan] = React.useState([])
-  const [veic, setVeic] = React.useState([])
   const [modalOn, setModalOn] = React.useState(false)
   const [placa, setPlaca] = React.useState("")
   const [modelo, setModelo] = React.useState("")
@@ -25,15 +25,18 @@ const Manutencoes = () => {
 
     fetch('http://localhost:3000/agrotech/manutencoes', options)
     .then(response => response.json())
-    .then(response => setMan(response))
-    .catch(err => console.log(err))
-
-    fetch('http://localhost:3000/agrotech/veiculos', options)
-    .then(response => response.json())
     .then(response => {
-        if (condition) {
-            
+      let aux = []
+      let auxO = []
+      response.forEach(m => {
+        if (m.data_fim) {
+          aux.push(m)
+        } else {
+          auxO.push(m)
         }
+      })
+      setMan(aux)
+      setManO(auxO)
     })
     .catch(err => console.log(err))
   }
@@ -88,19 +91,7 @@ const Manutencoes = () => {
               <AntDesign name="close" size={18} color="white" />
             </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center', width: '100%', display: 'flex', justifyContent: 'center'}}>
-            <Text style={{marginRight: 5}}>PLACA:</Text>
-            <Picker style={{padding: 5}}
-            selectedValue={tipo}
-            onValueChange={(itemValue, itemIndex) =>
-              setTipo(itemValue)
-            }
-          >
-            <Picker.Item label="Carga" value="carga" />
-            <Picker.Item label="Vendas" value="vendas" />
-            <Picker.Item label="Visita" value="visita" />
-          </Picker>
-          </View>
+          
           <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center', width: '100%', display: 'flex', justifyContent: 'center'}}>
             <Text style={{marginRight: 5}}>MODELO:</Text>
             <TextInput onChangeText={(value) => setModelo(value)} value={modelo} style={{borderBottomWidth: 1, borderBottomColor: 'black', width: '68%', padding: 5}} />
@@ -134,18 +125,21 @@ const Manutencoes = () => {
       }
         
       </View>
-      <View style={{alignItems: 'flex-start'}}>
-        <TouchableOpacity style={{backgroundColor: '#002647', paddingVertical: 5, paddingHorizontal: 10, marginBottom: 10}}>
-            <Text style={{color: 'white', fontSize: 20}}>Cadastrar</Text>
-        </TouchableOpacity>
-      </View>
       <ScrollView style={{flex: 1}}>
+        <View style={{alignItems: 'flex-start', marginBottom: 10}}>
+          <Text style={{fontSize: 20}}>Em Aberto</Text>
+        </View>
+        {manO.map((m, index) => {
+          return(
+            <Manutencao key={index} m={m} onPress={setModalOn}/>
+          )
+        })}
+        <View style={{width: '100%', height: 1, backgroundColor: "#002647", marginVertical: 10}}></View>
         {man.map((m, index) => {
           return(
             <Manutencao key={index} m={m} onPress={setModalOn}/>
           )
         })}
-
       </ScrollView>
     </View>
   );
