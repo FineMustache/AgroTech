@@ -1384,8 +1384,7 @@ function carregarOperacoes() {
         options: {
             plugins: {
               title: {
-                display: true,
-                text: 'Chart.js Bar Chart - Stacked'
+                display: false,
               },
               legend: {
                 display: false

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,51 +7,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id Int @id @default(autoincrement())
+model manutencao {
+  id          Int       @id @default(autoincrement())
+  data_inicio DateTime  @default(now())
+  data_fim    DateTime?
+  valor       Float
+  descricao   String
+  id_veiculo  Int
+  veiculo     veiculo   @relation(fields: [id_veiculo], references: [id], map: "Manutencao_id_veiculo_fkey")
+
+  @@index([id_veiculo], map: "Manutencao_id_veiculo_fkey")
+}
+
+model motorista {
+  id         Int        @id @default(autoincrement())
+  cpf        String     @unique(map: "Motorista_cpf_key")
+  cnh        String     @unique(map: "Motorista_cnh_key")
+  nome       String
+  disponivel Boolean    @default(true)
+  operacao   operacao[]
+}
+
+model operacao {
+  id           Int       @id @default(autoincrement())
+  id_motorista Int
+  data_saida   DateTime  @default(now())
+  data_retorno DateTime?
+  descricao    String
+  id_veiculo   Int
+  motorista    motorista @relation(fields: [id_motorista], references: [id], map: "Operacao_id_motorista_fkey")
+  veiculo      veiculo   @relation(fields: [id_veiculo], references: [id], map: "Operacao_id_veiculo_fkey")
+
+  @@index([id_motorista], map: "Operacao_id_motorista_fkey")
+  @@index([id_veiculo], map: "Operacao_id_veiculo_fkey")
+}
+
+model usuario {
+  id    Int    @id @default(autoincrement())
   email String
   senha String
-  nome String
-  tipo String
+  nome  String
+  tipo  String
 }
 
-model Motorista {
-  id Int @id @default(autoincrement())
-  cpf String @unique
-  cnh String @unique
-  nome String
-  disponivel Boolean @default(true)
-  operacoes Operacao[]
-}
-
-model Veiculo {
-  id Int @id @default(autoincrement())
-  placa String @unique
-  modelo String
-  marca String
-  tipo String
-  disponivel Boolean @default(true)
-  manutencoes Manutencao[]
-  operacoes Operacao[]
-}
-
-model Manutencao {
-  id Int @id @default(autoincrement())
-  data_inicio DateTime @default(now())
-  data_fim DateTime?
-  valor Float
-  descricao String
-  id_veiculo Int
-  veiculo Veiculo @relation(fields: [id_veiculo], references: [id])
-}
-
-model Operacao {
-  id Int @id @default(autoincrement())
-  id_motorista Int
-  id_veiculo Int
-  data_saida DateTime @default(now())
-  data_retorno DateTime?
-  descricao String
-  motorista Motorista @relation(fields: [id_motorista], references: [id])
-  veiculo Veiculo @relation(fields: [id_veiculo], references: [id])
+model veiculo {
+  id         Int          @id @default(autoincrement())
+  placa      String       @unique(map: "Veiculo_placa_key")
+  modelo     String
+  marca      String
+  tipo       String
+  disponivel Boolean      @default(true)
+  manutencao manutencao[]
+  operacao   operacao[]
 }

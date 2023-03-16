@@ -10,8 +10,8 @@ import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@
 
 import { MaterialIcons } from '@expo/vector-icons';
 
-const Manutencao = (props) => {
-  const {m, onPress} = props
+const Operacao = (props) => {
+  const {o, onPress} = props
 
   let [fontsLoaded] = useFonts({
     Kanit_400Regular,
@@ -24,16 +24,16 @@ const Manutencao = (props) => {
   }
 
   return (
-    <View style={{ marginBottom: 5, shadowColor: "rgb(0,0,0)", opacity: m.data_fim ? .5 : 1}}>
+    <View style={{ marginBottom: 5, shadowColor: "rgb(0,0,0)", opacity: o.data_retorno ? .5 : 1}}>
       <Swipeable
         renderRightActions={() => {
-          if (m.data_fim) {
+          if (o.data_retorno) {
             return(null)
           } else {
             return(
               <TouchableOpacity style={{...styles.swipeableAction,}}>
                 <Text>
-                <MaterialIcons name="check" size={24} color="white" onPress={() => onPress(m.id, m.veiculo.id)} />
+                <MaterialIcons name="check" size={24} color="white" onPress={() => onPress(o.id, o.veiculo.id, o.motorista.id)} />
                 </Text>
               </TouchableOpacity>
             )
@@ -42,11 +42,11 @@ const Manutencao = (props) => {
       >
         <View style={styles.swipeableItem}>
           <View>
-            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Placa: <Text style={{color: "#555", fontWeight: '400'}}>{m.veiculo.placa}</Text></Text>
-            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Descrição: <Text style={{color: "#555", fontWeight: '400'}}>{m.descricao}</Text></Text>
-            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Data Início: <Text style={{color: "#555", fontWeight: '400'}}>{new Date(m.data_inicio).toLocaleString('pt-br')}</Text></Text>
-            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Data Fim: <Text style={{color: "#555", fontWeight: '400'}}>{m.data_fim ? new Date(m.data_fim).toLocaleString('pt-br') : "-"}</Text></Text>
-            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Valor: <Text style={{color: "#555", fontWeight: '400'}}>R$ {parseFloat(m.valor).toFixed(2).replace('.',',')}</Text></Text>
+            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Placa: <Text style={{color: "#555", fontWeight: '400'}}>{o.veiculo.placa}</Text></Text>
+            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Valor: <Text style={{color: "#555", fontWeight: '400'}}>{o.motorista.nome}</Text></Text>
+            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Descrição: <Text style={{color: "#555", fontWeight: '400'}}>{o.descricao}</Text></Text>
+            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Data Início: <Text style={{color: "#555", fontWeight: '400'}}>{new Date(o.data_saida).toLocaleString('pt-br')}</Text></Text>
+            <Text style={{color: "#002647", fontWeight: 'bold', fontFamily: 'Kanit_400Regular'}}>Data Fim: <Text style={{color: "#555", fontWeight: '400'}}>{o.data_retorno ? new Date(o.data_retorno).toLocaleString('pt-br') : "-"}</Text></Text>
           </View>
         </View>
       </Swipeable>
@@ -80,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Manutencao;
+export default Operacao;

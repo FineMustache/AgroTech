@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import Manutencao from "../../components/Manutencao";
+import Operacao from "../../components/Operacao";
 import {Picker} from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@expo-google-fonts/kanit';
 
-const Manutencoes = () => {
-  const [manO, setManO] = React.useState([])
-  const [man, setMan] = React.useState([])
+const Operacoes = () => {
+  const [opO, setManO] = React.useState([])
+  const [op, setMan] = React.useState([])
   const [modalOn, setModalOn] = React.useState(false)
   const [placa, setPlaca] = React.useState("")
   const [modelo, setModelo] = React.useState("")
@@ -24,16 +24,16 @@ const Manutencoes = () => {
   const carregar = () => {
     const options = {method: 'GET', headers: {'Bypass-Tunnel-Reminder': 1}};
 
-    fetch('http://localhost:3000/agrotech/manutencoes', options)
+    fetch('http://localhost:3000/agrotech/operacoes', options)
     .then(response => response.json())
     .then(response => {
       let aux = []
       let auxO = []
-      response.forEach(m => {
-        if (m.data_fim) {
-          aux.push(m)
+      response.forEach(o => {
+        if (o.data_retorno) {
+          aux.push(o)
         } else {
-          auxO.push(m)
+          auxO.push(o)
         }
       })
       setMan(aux)
@@ -42,16 +42,16 @@ const Manutencoes = () => {
     .catch(err => console.log(err))
   }
 
-  const finalizar = (id, v) => {
+  const finalizar = (id, v, m) => {
     setIsLoading(true);
     
     const options = {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 1},
-      body: `{"id":${id}, "id_veiculo":${v}}`
+      headers: {'Content-Type': 'application/json','Bypass-Tunnel-Reminder': 1},
+      body: `{"id":${id}, "id_veiculo":${v}, "id_motorista":${m}}`
     };
     
-    fetch('http://localhost:3000/agrotech/manutencoes/finalizar', options)
+    fetch('http://localhost:3000/agrotech/operacoes/finalizar', options)
       .then(response => response.json())
       .then(response => {
         carregar()
@@ -79,18 +79,18 @@ const Manutencoes = () => {
         <View style={{alignItems: 'flex-start', marginBottom: 10}}>
           <Text style={{fontSize: 20, fontFamily: 'Kanit_400Regular'}}>Em Aberto</Text>
         </View>
-        {manO.length == 0 && 
-          <Text style={{color: "#555", fontFamily: 'Kanit_400Regular'}}>Nenhuma Manutenção em Aberto</Text>
+        {opO.length == 0 && 
+          <Text style={{color: "#555", fontFamily: 'Kanit_400Regular'}}>Nenhuma Operação em Aberto</Text>
         }
-        {manO.map((m, index) => {
+        {opO.map((o, index) => {
           return(
-            <Manutencao key={index} m={m} onPress={finalizar}/>
+            <Operacao key={index} o={o} onPress={finalizar}/>
           )
         })}
         <View style={{width: '100%', height: 1, backgroundColor: "#002647", marginVertical: 10}}></View>
-        {man.map((m, index) => {
+        {op.map((o, index) => {
           return(
-            <Manutencao key={index} m={m} onPress={() => {}}/>
+            <Operacao key={index} o={o} onPress={() => {}}/>
           )
         })}
       </ScrollView>
@@ -109,4 +109,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Manutencoes;
+export default Operacoes;

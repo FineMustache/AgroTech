@@ -4,6 +4,7 @@ import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@
 import { TextInput } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const colors = {
     "gray": "#201f1d",
@@ -46,22 +47,12 @@ export default function LoginScreen({navigation}) {
 
     // This function will be triggered when the button is pressed
 
-    let [fontsLoaded] = useFonts({
-        Kanit_400Regular,
-        Kanit_200ExtraLight,
-        Kanit_700Bold
-      });
-    
-      if (!fontsLoaded) {
-        return null;
-      }
-
       const logar = () => {
         if (username.length > 0 && password.length > 0) {
             setIsLoading(true);
             const options = {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 1},
                 body: `{"email":"${username}","senha":"${password}"}`
             };
             
@@ -70,7 +61,7 @@ export default function LoginScreen({navigation}) {
                 .then(response => {
                     if (response.validation) {
                         storeData(response).then(
-                            console.log(response)
+                            navigation.navigate('Home')
                         )
                     }else{
                         setErrOn(true)
@@ -83,9 +74,22 @@ export default function LoginScreen({navigation}) {
         
     }
       
-    
+    let [fontsLoaded] = useFonts({
+      Kanit_400Regular,
+      Kanit_200ExtraLight,
+      Kanit_700Bold
+    });
+  
+    if (!fontsLoaded) {
+      return null;
+    }
+
     return (
       <View style={styles.container}>
+        <View style={{alignItems: 'center', paddingVertical: 20, flexDirection: 'row', width: "100%", justifyContent: 'center', backgroundColor: '#002647'}}>
+          <Text><FontAwesome5 name="seedling" size={34} color="white" /></Text>
+          <Text style={{fontSize: 25, marginLeft: 10, color: 'white', fontFamily: 'Kanit_400Regular'}}>AgroTech</Text>
+        </View>
         <View style={styles.login}>
             <TextInput placeholder={"Usuário"} style={styles.input} placeholderTextColor={"#758594"} onChangeText={(val) => { setUsername(val)}}/>
             <TextInput secureTextEntry={true} placeholder={"Senha"} style={styles.input} placeholderTextColor={"#758594"} onChangeText={(val) => {setPassword(val)}}/>
