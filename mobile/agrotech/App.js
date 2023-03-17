@@ -73,9 +73,9 @@ function Home({navigation}) {
           
         )
       }}}>
-        <Tab.Screen options={{headerTitleStyle: {color: '#ffffff'}, tabBarIcon: ({focused, color, size}) => <MaterialCommunityIcons name="account-hard-hat" size={focused ? size+4 : size+2} color={color} />}} name="Manutenções" component={Manutencoes} />
+        <Tab.Screen options={{headerTitleStyle: {color: '#ffffff'}, tabBarIcon: ({focused, color, size}) => <FontAwesome5 name="tools" size={focused ? size-1 : size-3} color={color} />}} name="Manutenções" component={Manutencoes} />
         <Tab.Screen options={{headerTitleStyle: {color: '#ffffff'}, tabBarIcon: ({focused, color, size}) => <FontAwesome5 name="car-alt" size={focused ? size+2 : size} color={color} />}} name="Veículos" component={Motoristas} />
-        <Tab.Screen options={{headerTitleStyle: {color: '#ffffff'}, tabBarIcon: ({focused, color, size}) => <FontAwesome5 name="tools" size={focused ? size-1 : size-3} color={color} />}} name="Operações" component={Operacoes} />
+        <Tab.Screen options={{headerTitleStyle: {color: '#ffffff'}, tabBarIcon: ({focused, color, size}) => <MaterialCommunityIcons name="account-hard-hat" size={focused ? size+4 : size+2} color={color} />}} name="Operações" component={Operacoes} />
         {/* <Drawer.Screen options={{headerTitleStyle: {color: '#ffffff'}, drawerLabelStyle: {color: "#ffffff"}, drawerStyle: {backgroundColor: '#161614'}, drawerActiveBackgroundColor: '#c4a000', drawerActiveTintColor: '#000000'}} name="Perfil" component={ProfileScreen} /> */}
       </Tab.Navigator>
   );
