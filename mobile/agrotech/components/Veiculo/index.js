@@ -8,11 +8,21 @@ import {
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@expo-google-fonts/kanit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
 const Veiculo = (props) => {
-  const {v, onPress} = props
+  const {v, onPress, u} = props
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@uinfo')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
   let [fontsLoaded] = useFonts({
     Kanit_400Regular,
@@ -27,13 +37,19 @@ const Veiculo = (props) => {
   return (
     <View style={{ marginBottom: 5, shadowColor: "rgb(0,0,0)"}}>
       <Swipeable
-        renderRightActions={() => (
-          <TouchableOpacity style={styles.swipeableAction}>
-            <Text>
-            <MaterialIcons name="edit" size={24} color="white" onPress={() => onPress(v)} />
-            </Text>
-          </TouchableOpacity>
-        )}
+        renderRightActions={() => {
+          if (u.tipo == 'gerente') {
+            return(<TouchableOpacity style={styles.swipeableAction}>
+              <Text>
+              <MaterialIcons name="edit" size={24} color="white" onPress={() => onPress(v)} />
+              </Text>
+            </TouchableOpacity>)
+          } else {
+            return(null)
+          }
+        }
+          
+        }
       >
         <View style={styles.swipeableItem}>
           <View style={{width: '20%'}}>

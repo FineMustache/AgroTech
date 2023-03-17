@@ -11,7 +11,7 @@ import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@
 import { MaterialIcons } from '@expo/vector-icons';
 
 const Operacao = (props) => {
-  const {o, onPress} = props
+  const {u, o, onPress} = props
 
   let [fontsLoaded] = useFonts({
     Kanit_400Regular,
@@ -30,13 +30,18 @@ const Operacao = (props) => {
           if (o.data_retorno) {
             return(null)
           } else {
-            return(
-              <TouchableOpacity style={{...styles.swipeableAction,}}>
-                <Text>
-                <MaterialIcons name="check" size={24} color="white" onPress={() => onPress(o.id, o.veiculo.id, o.motorista.id)} />
-                </Text>
-              </TouchableOpacity>
-            )
+            if (u.tipo == 'gerente') {
+              return(
+                <TouchableOpacity style={{...styles.swipeableAction,}}>
+                  <Text>
+                  <MaterialIcons name="check" size={24} color="white" onPress={() => onPress(o.id, o.veiculo.id, o.motorista.id)} />
+                  </Text>
+                </TouchableOpacity>
+              )
+            } else {
+              return(null)
+            }
+            
           }
           }}
       >

@@ -4,7 +4,6 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5, MaterialCommunityIcons, Entypo, Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,6 +17,22 @@ const Tab = createBottomTabNavigator();
 
 function Home({navigation}) {
   const [mhOn, setMhOn] = React.useState(false)
+  const [uinfo, setUinfo] = React.useState({})
+  
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@uinfo')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+
+  React.useEffect(() => {
+    getData().then(u => setUinfo(u))
+  }, [])
+
   let [fontsLoaded] = useFonts({
     Kanit_400Regular,
     Kanit_200ExtraLight,
@@ -28,6 +43,7 @@ function Home({navigation}) {
     return null;
   }
 
+  
   const deslogar = async () =>{
     try {
       await AsyncStorage.removeItem('@uinfo')
@@ -46,10 +62,11 @@ function Home({navigation}) {
         return(
           <View style={{position: 'relative', marginRight: 10}}>
             <TouchableOpacity onPress={() => setMhOn(!mhOn)}><Entypo name="menu" size={24} color="white" /></TouchableOpacity>
-            <View style={{display: mhOn ? 'flex' : 'none', position: 'absolute', top: '100%', right: 0, padding:10, backgroundColor: 'white', shadowColor: 'black', shadowOffset: 0, shadowOpacity: .5, shadowRadius: 10}}>
-              <TouchableOpacity onPress={() => deslogar()} style={{paddingHorizontal: 15, paddingVertical: 10, backgroundColor: "#a00", flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={{fontSize: 20, color: "white", marginRight: 5, fontFamily: 'Kanit_400Regular'}}>Sair</Text>
-                <Ionicons name="log-out-outline" size={24} color="white" />
+            <View style={{display: mhOn ? 'flex' : 'none', position: 'absolute', top: '100%', right: 0, padding:10, backgroundColor: 'white', shadowColor: 'black', shadowOffset: 0, shadowOpacity: .5, shadowRadius: 10, alignItems:'center'}}>
+              <Text numberOfLines={1} style={{fontFamily: 'Kanit_400Regular', fontSize: 20}}>{uinfo.uname}</Text>
+              <Text numberOfLines={1} style={{fontFamily: 'Kanit_400Regular', fontSize: 14, color: '#555'}}>{uinfo.tipo.slice(0,1).toUpperCase() + uinfo.tipo.slice(1)}</Text>
+              <TouchableOpacity onPress={() => deslogar()} style={{paddingHorizontal: 15, paddingVertical: 10, backgroundColor: "#a00", flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: 10}}>
+                <Text style={{fontSize: 20, color: "white", fontFamily: 'Kanit_400Regular'}}>Sair</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -71,8 +88,6 @@ export default function App() {
       <Stack.Navigator initialRouteName='Login' screenOptions={{headerStyle: {backgroundColor: '#002647', borderBottomColor: '#002647'}, headerBackVisible: false, headerBackButtonMenuEnabled: false}}>
         <Stack.Screen options={{headerTitleStyle: {color: '#ffffff'}, headerShown: false}} name="Home" component={Home}  />
         <Stack.Screen options={{headerTitleStyle: {color: '#ffffff'}, headerShown: false}} name="Login" component={LoginScreen}  />
-        {/* <Stack.Screen options={{headerTitleStyle: {color: '#ffffff'}}} name="Cadastro" component={SignUpScreen}  />
-        <Stack.Screen options={{headerTitleStyle: {color: '#ffffff'}}} name="Post" component={PostScreen}  /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

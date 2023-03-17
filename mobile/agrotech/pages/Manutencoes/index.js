@@ -5,6 +5,7 @@ import Manutencao from "../../components/Manutencao";
 import {Picker} from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@expo-google-fonts/kanit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Manutencoes = () => {
   const [manO, setManO] = React.useState([])
@@ -16,10 +17,25 @@ const Manutencoes = () => {
   const [tipo, setTipo] = React.useState('carga')
   const [selectedId, setSelectedId] = React.useState()
   const [isLoading, setIsLoading] = React.useState(false)
+  const [u, setU] = React.useState({})
 
   React.useEffect(() => {
-    carregar()
+    getData().then(aux => setU(aux))
   }, [])
+
+  React.useEffect(() => {
+    console.log(u)
+    carregar()
+  }, [u])
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@uinfo')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
   const carregar = () => {
     const options = {method: 'GET', headers: {'Bypass-Tunnel-Reminder': 1}};
@@ -84,13 +100,13 @@ const Manutencoes = () => {
         }
         {manO.map((m, index) => {
           return(
-            <Manutencao key={index} m={m} onPress={finalizar}/>
+            <Manutencao u={u} key={index} m={m} onPress={finalizar}/>
           )
         })}
         <View style={{width: '100%', height: 1, backgroundColor: "#002647", marginVertical: 10}}></View>
         {man.map((m, index) => {
           return(
-            <Manutencao key={index} m={m} onPress={() => {}}/>
+            <Manutencao u={u} key={index} m={m} onPress={() => {}}/>
           )
         })}
       </ScrollView>

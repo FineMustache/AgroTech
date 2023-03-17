@@ -5,6 +5,7 @@ import Operacao from "../../components/Operacao";
 import {Picker} from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 import { useFonts, Kanit_200ExtraLight, Kanit_400Regular, Kanit_700Bold} from '@expo-google-fonts/kanit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Operacoes = () => {
   const [opO, setManO] = React.useState([])
@@ -16,10 +17,24 @@ const Operacoes = () => {
   const [tipo, setTipo] = React.useState('carga')
   const [selectedId, setSelectedId] = React.useState()
   const [isLoading, setIsLoading] = React.useState(false)
+  const [u, setU] = React.useState({})
+
+  React.useEffect(() => {
+    getData().then(aux => setU(aux))
+  }, [])
 
   React.useEffect(() => {
     carregar()
-  }, [])
+  }, [u])
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@uinfo')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch(e) {
+      console.log(e);
+    }
+  }
 
   const carregar = () => {
     const options = {method: 'GET', headers: {'Bypass-Tunnel-Reminder': 1}};
@@ -84,13 +99,13 @@ const Operacoes = () => {
         }
         {opO.map((o, index) => {
           return(
-            <Operacao key={index} o={o} onPress={finalizar}/>
+            <Operacao u={u} key={index} o={o} onPress={finalizar}/>
           )
         })}
         <View style={{width: '100%', height: 1, backgroundColor: "#002647", marginVertical: 10}}></View>
         {op.map((o, index) => {
           return(
-            <Operacao key={index} o={o} onPress={() => {}}/>
+            <Operacao u={u} key={index} o={o} onPress={() => {}}/>
           )
         })}
       </ScrollView>
