@@ -22,6 +22,9 @@ const readAll = async (req, res) => {
             nome: true,
             disponivel: true,
             operacoes: true
+        },
+        where: {
+            ativo: true
         }
     })
 
@@ -59,9 +62,12 @@ const update = async (req, res) => {
 }
 
 const remove = async (req, res) => {
-    const motorista = await prisma.motorista.delete({
+    const motorista = await prisma.motorista.update({
         where: {
             id: Number(req.body.id)
+        },
+        data: {
+            ativo: false
         }
     })
 

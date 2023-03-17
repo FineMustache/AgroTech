@@ -25,7 +25,8 @@ model motorista {
   cnh        String     @unique(map: "Motorista_cnh_key")
   nome       String
   disponivel Boolean    @default(true)
-  operacao   operacao[]
+  ativo      Boolean    @default(true)
+  operacoes   operacao[]
 }
 
 model operacao {
@@ -57,6 +58,7 @@ model veiculo {
   marca      String
   tipo       String
   disponivel Boolean      @default(true)
-  manutencao manutencao[]
-  operacao   operacao[]
+  ativo      Boolean      @default(true)
+  manutencoes manutencao[]
+  operacoes   operacao[]
 }

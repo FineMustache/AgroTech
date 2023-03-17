@@ -24,6 +24,9 @@ const readAll = async (req, res) => {
             disponivel: true,
             operacoes: true,
             manutencoes: true,
+        },
+        where: {
+            ativo: true
         }
     })
 
@@ -63,9 +66,12 @@ const update = async (req, res) => {
 }
 
 const remove = async (req, res) => {
-    const veiculo = await prisma.veiculo.delete({
+    const veiculo = await prisma.veiculo.update({
         where: {
             id: Number(req.body.id)
+        },
+        data: {
+            ativo: false
         }
     })
 
