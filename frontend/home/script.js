@@ -436,7 +436,7 @@ function cadastrarMotorista() {
 
 function logout() {
     window.localStorage.removeItem('@uinfo')
-    window.location.href = "../login"
+    window.location.href = "../login/index.html"
 }
 
 setInterval(validarToken, 5000)
@@ -444,7 +444,7 @@ setInterval(validarToken, 5000)
 function validarToken() {
     let uinfo = window.localStorage.getItem('@uinfo')
     if (uinfo == null) {
-        window.location.href = "../login"
+        window.location.href = "../login/index.html"
     }else{
         uinfo = JSON.parse(uinfo)
         const options = {
@@ -489,7 +489,7 @@ function carregarVeiculos() {
             filterVeicChange()
             let uinfo = window.localStorage.getItem('@uinfo')
             if (uinfo == null) {
-                window.location.href = "../login"
+                window.location.href = "../login/index.html"
             }else{
                 uinfo = JSON.parse(uinfo)
                 
@@ -865,7 +865,7 @@ function carregarManutencoes() {
         filterManChange()
         let uinfo = window.localStorage.getItem('@uinfo')
         if (uinfo == null) {
-            window.location.href = "../login"
+            window.location.href = "../login/index.html"
         }else{
             uinfo = JSON.parse(uinfo)
             
@@ -1201,7 +1201,7 @@ function carregarOperacoes() {
         filterOpChange()
         let uinfo = window.localStorage.getItem('@uinfo')
             if (uinfo == null) {
-                window.location.href = "../login"
+                window.location.href = "../login/index.html"
             }else{
                 uinfo = JSON.parse(uinfo)
                 
